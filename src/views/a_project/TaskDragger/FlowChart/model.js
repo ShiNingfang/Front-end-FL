@@ -86,6 +86,6 @@ export default {
   },
 
   getHead() {
-    return FlowChartJson.head
+    return FlowChartJson.nodes.find(node => node.data.type === '数据源').id
   }
 }

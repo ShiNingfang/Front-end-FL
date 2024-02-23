@@ -147,126 +147,341 @@
             <el-container id="mainNodeInfo" style="height: 100%;">
               <el-main>
                 <!-- 参数配置 -->
-                <div v-show="toolBarShow==='component'" v-if="currentNodeType == '线性回归'">
-                  <div class="title">参数配置-选择数据源样本</div>
-                  <div class="model-attr">
-                    <el-form :model="formInline" class="demo-form-inline" style="height:100%; padding-right:20px;" label-width="100px">
-                      <el-col :span="12">
-                        <el-form-item label="a1">
-                          <el-slider />
-                        </el-form-item>
-                        <el-form-item label="a1">
-                          <el-slider />
-                        </el-form-item>
-                        <el-form-item label="a1">
-                          <el-slider />
-                        </el-form-item>
-                        <el-form-item label="a1">
-                          <el-slider />
-                        </el-form-item>
-                        <el-form-item label="优化器">
-                          <el-select v-model="form.optimizer" placeholder="请选择">
-                            <el-option label="RMSProp" value="rmsprop" />
-                          </el-select>
-                        </el-form-item>
-                        <el-form-item label="优化器">
-                          <el-select v-model="form.optimizer" placeholder="请选择">
-                            <el-option label="RMSProp" value="rmsprop" />
-                          </el-select>
-                        </el-form-item>
-                        <el-form-item label="hhh">
-                          <el-switch
-                            v-model="value1"
-                          />
-                        </el-form-item>
-                        <el-form-item label="hhh">
-                          <el-switch
-                            v-model="value1"
-                          />
-                        </el-form-item>
-                      </el-col>
-                      <el-col :span="12">
-                        <el-form-item label="a1">
-                          <el-slider />
-                        </el-form-item>
-                        <el-form-item label="a1">
-                          <el-slider />
-                        </el-form-item>
-                        <el-form-item label="a1">
-                          <el-slider />
-                        </el-form-item>
-                        <el-form-item label="a1">
-                          <el-slider />
-                        </el-form-item>
-                        <el-form-item label="优化器">
-                          <el-select v-model="form.optimizer" placeholder="请选择">
-                            <el-option label="RMSProp" value="rmsprop" />
-                          </el-select>
-                        </el-form-item>
-                        <el-form-item label="优化器">
-                          <el-select v-model="form.optimizer" placeholder="请选择">
-                            <el-option label="RMSProp" value="rmsprop" />
-                          </el-select>
-                        </el-form-item>
-                        <el-form-item label="hhh">
-                          <el-switch
-                            v-model="value1"
-                          />
-                        </el-form-item>
-                        <el-form-item label="hhh">
-                          <el-switch
-                            v-model="value1"
-                          />
-                        </el-form-item>
-                      </el-col>
-                    </el-form>
+                <div class="title">参数配置-{{ currentNodeType }}</div>
+                <div class="model-attr">
+                  <!-- 数据源 -->
+                  <div v-if="currentNodeType == '数据源' " style="height: 100%;">
+                    <!-- <div class="title">参数配置-选择数据源样本</div> -->
+                    <div class="model-attr" style="height: calc(100% - 41px);">
+                      <el-table
+                        ref="multipleTable"
+                        :data="tableData2"
+                        tooltip-effect="dark"
+                        style="width: 100%;"
+                        height="100%"
+                        show-overflow-tooltip
+                        highlight-current-row
+                        stripe
+                        @row-click="rowClick"
+                      >
+                        <el-table-column label="选择" width="55" align="center">
+                          <template slot-scope="scope">
+                            <el-radio
+                              v-model="tenderProjectId"
+                              :label="scope.row.name"
+                            >{{ '' }}</el-radio>
+                          </template>
+                        </el-table-column>
+                        <el-table-column
+                          prop="name"
+                          label="样本名称"
+                          align="center"
+                          width="100px"
+                          show-overflow-tooltip
+                        />
+                        <el-table-column
+                          prop="count"
+                          label="样本记录数"
+                          align="center"
+                          width="100px"
+                          show-overflow-tooltip
+                        />
+                        <el-table-column
+                          prop="description"
+                          label="描述"
+                          min-width="100px"
+                          show-overflow-tooltip
+                        />
+                      </el-table>
+                    </div>
                   </div>
-                </div>
-                <!-- 样本选择 -->
-                <div v-show="toolBarShow==='component'" v-if="currentNodeType == '数据源' || currentNodeType == '求交'" style="height: 100%;">
-                  <div class="title">参数配置-选择数据源样本</div>
-                  <div class="model-attr" style="height: calc(100% - 41px);">
-                    <el-table
-                      ref="multipleTable"
-                      :data="tableData2"
-                      tooltip-effect="dark"
-                      style="width: 100%;"
-                      height="100%"
-                      show-overflow-tooltip
-                      highlight-current-row
-                      stripe
-                      @row-click="rowClick"
-                    >
-                      <el-table-column label="选择" width="55" align="center">
-                        <template slot-scope="scope">
-                          <el-radio
-                            v-model="tenderProjectId"
-                            :label="scope.row.name"
-                          >{{ '' }}</el-radio>
-                        </template>
-                      </el-table-column>
-                      <el-table-column
-                        prop="name"
-                        label="样本名称"
-                        align="center"
-                        width="100px"
-                        show-overflow-tooltip
-                      />
-                      <el-table-column
-                        prop="count"
-                        label="样本记录数"
-                        align="center"
-                        width="100px"
-                        show-overflow-tooltip
-                      />
-                      <el-table-column
-                        prop="description"
-                        label="描述"
-                        min-width="100px"
-                        show-overflow-tooltip
-                      />
-                    </el-table>
-                  </div>
+                  <el-form v-if="currentNodeType === '标准模式训练' || currentNodeType === '负数据库' || currentNodeType === '改进的生成对抗网络' || currentNodeType === '共享权重模式协作学习'" :model="paramsForm" class="demo-form-inline" style="height:100%; padding-right:20px;" label-width="100px">
+                    <el-col :span="12">
+                      <el-form-item label="no_models">
+                        <el-input-number v-model="paramsForm.no_models" :min="1" :step="1" step-strictly size="mini" style="vertical-align: middle;" />
+                      </el-form-item>
+                      <el-form-item label="model_name">
+                        <el-select v-model="paramsForm.model_name" placeholder="请选择" size="mini">
+                          <el-option label="resnet50" value="resnet50" />
+                          <el-option label="vgg16" value="vgg16" />
+                          <el-option label="inception" value="inception" />
+                        </el-select>
+                      </el-form-item>
+                      <el-form-item label="type">
+                        <el-select v-model="paramsForm.type" placeholder="请选择" size="mini">
+                          <el-option label="cifar" value="cifar" />
+                          <el-option label="mnist" value="mnist" />
+                          <el-option label="imagenet" value="imagenet" />
+                        </el-select>
+                      </el-form-item>
+                      <el-form-item label="global_epochs">
+                        <el-input-number v-model="paramsForm.global_epochs" :min="1" :step="1" step-strictly size="mini" />
+                      </el-form-item>
+                      <el-form-item label="local_epochs">
+                        <el-input-number v-model="paramsForm.local_epochs" :min="1" :step="1" step-strictly size="mini" />
+                      </el-form-item>
+                      <el-form-item label="batch_size">
+                        <el-input-number v-model="paramsForm.batch_size" :min="1" :step="1" step-strictly size="mini" />
+                      </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                      <el-form-item label="k">
+                        <el-input-number v-model="paramsForm.k" :min="1" :max="paramsForm.no_models" :step="1" step-strictly size="mini" />
+                      </el-form-item>
+                      <el-form-item label="lr">
+                        <el-input-number v-model="paramsForm.lr" :min="0.001" :max="1.0" :step="0.001" step-strictly size="mini" />
+                      </el-form-item>
+                      <el-form-item label="momentum">
+                        <el-input-number v-model="paramsForm.momentum" :min="0" :max="1.0" :step="0.1" step-strictly size="mini" />
+                      </el-form-item>
+                      <el-form-item label="lambda_">
+                        <el-input-number v-model="paramsForm.lambda_" :min="0" :max="1.0" :step="0.1" step-strictly size="mini" />
+                      </el-form-item>
+                      <el-form-item label="prop">
+                        <el-input-number v-model="paramsForm.prop" :min="0" :max="1.0" :step="0.1" step-strictly size="mini" />
+                      </el-form-item>
+                    </el-col>
+                  </el-form>
+                  <el-form v-if="currentNodeType === '差分隐私训练'" :model="paramsForm" class="demo-form-inline" style="height:100%; padding-right:20px;" label-width="100px">
+                    <el-col :span="12">
+                      <el-form-item label="no_models">
+                        <el-input-number v-model="paramsForm.no_models" :min="1" :step="1" step-strictly size="mini" />
+                      </el-form-item>
+                      <el-form-item label="model_name">
+                        <el-select v-model="paramsForm.model_name" placeholder="请选择" size="mini">
+                          <el-option label="resnet50" value="resnet50" />
+                          <el-option label="vgg16" value="vgg16" />
+                          <el-option label="inception" value="inception" />
+                        </el-select>
+                      </el-form-item>
+                      <el-form-item label="type">
+                        <el-select v-model="paramsForm.type" placeholder="请选择" size="mini">
+                          <el-option label="cifar" value="cifar" />
+                          <el-option label="mnist" value="mnist" />
+                          <el-option label="imagenet" value="imagenet" />
+                        </el-select>
+                      </el-form-item>
+                      <el-form-item label="global_epochs">
+                        <el-input-number v-model="paramsForm.global_epochs" :min="1" :step="1" step-strictly size="mini" />
+                      </el-form-item>
+                      <el-form-item label="local_epochs">
+                        <el-input-number v-model="paramsForm.local_epochs" :min="1" :step="1" step-strictly size="mini" />
+                      </el-form-item>
+                      <el-form-item label="batch_size">
+                        <el-input-number v-model="paramsForm.batch_size" :min="1" :step="1" step-strictly size="mini" />
+                      </el-form-item>
+                      <el-form-item label="k">
+                        <el-input-number v-model="paramsForm.k" :min="1" :max="paramsForm.no_models" :step="1" size="mini" />
+                      </el-form-item>
+                      <el-form-item label="lr">
+                        <el-input-number v-model="paramsForm.lr" :min="0.001" :max="1.0" :step="0.001" size="mini" />
+                      </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                      <el-form-item label="momentum">
+                        <el-input-number v-model="paramsForm.momentum" :min="0" :max="1.0" :step="0.1" size="mini" />
+                      </el-form-item>
+                      <el-form-item label="lambda_">
+                        <el-input-number v-model="paramsForm.lambda_" :min="0" :max="1.0" :step="0.1" size="mini" />
+                      </el-form-item>
+                      <el-form-item label="prop">
+                        <el-input-number v-model="paramsForm.prop" :min="0" :max="1.0" :step="0.1" size="mini" />
+                      </el-form-item>
+                      <el-form-item label="dp">
+                        <el-switch v-model="paramsForm.dp" active-color="#13ce66" inactive-color="#ff4949" />
+                      </el-form-item>
+                      <el-form-item label="C">
+                        <el-input-number v-model="paramsForm.C" :min="0" size="mini" />
+                      </el-form-item>
+                      <el-form-item label="sigma">
+                        <el-input-number v-model="paramsForm.sigma" :min="0" :step="0.01" size="mini" />
+                      </el-form-item>
+                      <el-form-item label="q">
+                        <el-input-number v-model="paramsForm.q" :min="0" :max="1.0" :step="0.1" size="mini" />
+                      </el-form-item>
+                      <el-form-item label="w">
+                        <el-input-number v-model="paramsForm.w" :step="1" step-strictly size="mini" />
+                      </el-form-item>
+                    </el-col>
+                  </el-form>
+                  <el-form v-if="currentNodeType === '同态加密'" :model="paramsForm" class="demo-form-inline" style="height:100%; padding-right:20px;" label-width="100px">
+                    <el-col :span="12">
+                      <el-form-item label="no_models">
+                        <el-input-number v-model="paramsForm.no_models" :min="1" :step="1" step-strictly size="mini" style="vertical-align: middle;" />
+                      </el-form-item>
+                      <el-form-item label="global_epochs">
+                        <el-input-number v-model="paramsForm.global_epochs" :min="1" :step="1" step-strictly size="mini" />
+                      </el-form-item>
+                      <el-form-item label="local_epochs">
+                        <el-input-number v-model="paramsForm.local_epochs" :min="1" :step="1" step-strictly size="mini" />
+                      </el-form-item>
+                      <el-form-item label="batch_size">
+                        <el-input-number v-model="paramsForm.batch_size" :min="1" :step="1" step-strictly size="mini" />
+                      </el-form-item>
+                      <el-form-item label="k">
+                        <el-input-number v-model="paramsForm.k" :min="1" :max="paramsForm.no_models" :step="1" step-strictly size="mini" />
+                      </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                      <el-form-item label="lr">
+                        <el-input-number v-model="paramsForm.lr" :min="0.001" :max="1.0" :step="0.001" step-strictly size="mini" />
+                      </el-form-item>
+                      <el-form-item label="momentum">
+                        <el-input-number v-model="paramsForm.momentum" :min="0" :max="1.0" :step="0.1" step-strictly size="mini" />
+                      </el-form-item>
+                      <el-form-item label="lambda_">
+                        <el-input-number v-model="paramsForm.lambda_" :min="0" :max="1.0" :step="0.1" step-strictly size="mini" />
+                      </el-form-item>
+                      <el-form-item label="prop">
+                        <el-input-number v-model="paramsForm.prop" :min="0" :max="1.0" :step="0.1" step-strictly size="mini" />
+                      </el-form-item>
+                      <el-form-item label="feature_num">
+                        <el-input-number v-model="paramsForm.feature_num" :min="1" :step="1" step-strictly size="mini" />
+                      </el-form-item>
+                    </el-col>
+                  </el-form>
+
+                  <!-- <el-form v-if="currentNodeType === '负数据库'" :model="negative_database_params" class="demo-form-inline" style="height:100%; padding-right:20px;" label-width="100px">
+                    <el-col :span="12">
+                      <el-form-item label="no_models">
+                        <el-input-number v-model="negative_database_params.no_models" :min="1" :step="1" step-strictly size="mini" style="vertical-align: middle;" />
+                      </el-form-item>
+                      <el-form-item label="model_name">
+                        <el-select v-model="negative_database_params.model_name" placeholder="请选择" size="mini">
+                          <el-option label="resnet50" value="resnet50" />
+                          <el-option label="vgg16" value="vgg16" />
+                          <el-option label="inception" value="inception" />
+                        </el-select>
+                      </el-form-item>
+                      <el-form-item label="type">
+                        <el-select v-model="negative_database_params.type" placeholder="请选择" size="mini">
+                          <el-option label="cifar" value="cifar" />
+                          <el-option label="mnist" value="mnist" />
+                          <el-option label="imagenet" value="imagenet" />
+                        </el-select>
+                      </el-form-item>
+                      <el-form-item label="global_epochs">
+                        <el-input-number v-model="negative_database_params.global_epochs" :min="1" :step="1" step-strictly size="mini" />
+                      </el-form-item>
+                      <el-form-item label="local_epochs">
+                        <el-input-number v-model="negative_database_params.local_epochs" :min="1" :step="1" step-strictly size="mini" />
+                      </el-form-item>
+                      <el-form-item label="batch_size">
+                        <el-input-number v-model="negative_database_params.batch_size" :min="1" :step="1" step-strictly size="mini" />
+                      </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                      <el-form-item label="k">
+                        <el-input-number v-model="negative_database_params.k" :min="1" :max="negative_database_params.no_models" :step="1" step-strictly size="mini" />
+                      </el-form-item>
+                      <el-form-item label="lr">
+                        <el-input-number v-model="negative_database_params.lr" :min="0.001" :max="1.0" :step="0.001" step-strictly size="mini" />
+                      </el-form-item>
+                      <el-form-item label="momentum">
+                        <el-input-number v-model="negative_database_params.momentum" :min="0" :max="1.0" :step="0.1" step-strictly size="mini" />
+                      </el-form-item>
+                      <el-form-item label="lambda_">
+                        <el-input-number v-model="negative_database_params.lambda_" :min="0" :max="1.0" :step="0.1" step-strictly size="mini" />
+                      </el-form-item>
+                      <el-form-item label="prop">
+                        <el-input-number v-model="negative_database_params.prop" :min="0" :max="1.0" :step="0.1" step-strictly size="mini" />
+                      </el-form-item>
+                    </el-col>
+                  </el-form>
+                  <el-form v-if="currentNodeType === '改进的生成对抗网络'" :model="improved_gan_params" class="demo-form-inline" style="height:100%; padding-right:20px;" label-width="100px">
+                    <el-col :span="12">
+                      <el-form-item label="no_models">
+                        <el-input-number v-model="improved_gan_params.no_models" :min="1" :step="1" step-strictly size="mini" style="vertical-align: middle;" />
+                      </el-form-item>
+                      <el-form-item label="model_name">
+                        <el-select v-model="improved_gan_params.model_name" placeholder="请选择" size="mini">
+                          <el-option label="resnet50" value="resnet50" />
+                          <el-option label="vgg16" value="vgg16" />
+                          <el-option label="inception" value="inception" />
+                        </el-select>
+                      </el-form-item>
+                      <el-form-item label="type">
+                        <el-select v-model="improved_gan_params.type" placeholder="请选择" size="mini">
+                          <el-option label="cifar" value="cifar" />
+                          <el-option label="mnist" value="mnist" />
+                          <el-option label="imagenet" value="imagenet" />
+                        </el-select>
+                      </el-form-item>
+                      <el-form-item label="global_epochs">
+                        <el-input-number v-model="improved_gan_params.global_epochs" :min="1" :step="1" step-strictly size="mini" />
+                      </el-form-item>
+                      <el-form-item label="local_epochs">
+                        <el-input-number v-model="improved_gan_params.local_epochs" :min="1" :step="1" step-strictly size="mini" />
+                      </el-form-item>
+                      <el-form-item label="batch_size">
+                        <el-input-number v-model="improved_gan_params.batch_size" :min="1" :step="1" step-strictly size="mini" />
+                      </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                      <el-form-item label="k">
+                        <el-input-number v-model="improved_gan_params.k" :min="1" :max="improved_gan_params.no_models" :step="1" step-strictly size="mini" />
+                      </el-form-item>
+                      <el-form-item label="lr">
+                        <el-input-number v-model="improved_gan_params.lr" :min="0.001" :max="1.0" :step="0.001" step-strictly size="mini" />
+                      </el-form-item>
+                      <el-form-item label="momentum">
+                        <el-input-number v-model="improved_gan_params.momentum" :min="0" :max="1.0" :step="0.1" step-strictly size="mini" />
+                      </el-form-item>
+                      <el-form-item label="lambda_">
+                        <el-input-number v-model="improved_gan_params.lambda_" :min="0" :max="1.0" :step="0.1" step-strictly size="mini" />
+                      </el-form-item>
+                      <el-form-item label="prop">
+                        <el-input-number v-model="improved_gan_params.prop" :min="0" :max="1.0" :step="0.1" step-strictly size="mini" />
+                      </el-form-item>
+                    </el-col>
+                  </el-form>
+                  <el-form v-if="currentNodeType === '共享权重模式协作学习'" :model="weight_sharing_params" class="demo-form-inline" style="height:100%; padding-right:20px;" label-width="100px">
+                    <el-col :span="12">
+                      <el-form-item label="no_models">
+                        <el-input-number v-model="weight_sharing_params.no_models" :min="1" :step="1" step-strictly size="mini" style="vertical-align: middle;" />
+                      </el-form-item>
+                      <el-form-item label="model_name">
+                        <el-select v-model="weight_sharing_params.model_name" placeholder="请选择" size="mini">
+                          <el-option label="resnet50" value="resnet50" />
+                          <el-option label="vgg16" value="vgg16" />
+                          <el-option label="inception" value="inception" />
+                        </el-select>
+                      </el-form-item>
+                      <el-form-item label="type">
+                        <el-select v-model="weight_sharing_params.type" placeholder="请选择" size="mini">
+                          <el-option label="cifar" value="cifar" />
+                          <el-option label="mnist" value="mnist" />
+                          <el-option label="imagenet" value="imagenet" />
+                        </el-select>
+                      </el-form-item>
+                      <el-form-item label="global_epochs">
+                        <el-input-number v-model="weight_sharing_params.global_epochs" :min="1" :step="1" step-strictly size="mini" />
+                      </el-form-item>
+                      <el-form-item label="local_epochs">
+                        <el-input-number v-model="weight_sharing_params.local_epochs" :min="1" :step="1" step-strictly size="mini" />
+                      </el-form-item>
+                      <el-form-item label="batch_size">
+                        <el-input-number v-model="weight_sharing_params.batch_size" :min="1" :step="1" step-strictly size="mini" />
+                      </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                      <el-form-item label="k">
+                        <el-input-number v-model="weight_sharing_params.k" :min="1" :max="weight_sharing_params.no_models" :step="1" step-strictly size="mini" />
+                      </el-form-item>
+                      <el-form-item label="lr">
+                        <el-input-number v-model="weight_sharing_params.lr" :min="0.001" :max="1.0" :step="0.001" step-strictly size="mini" />
+                      </el-form-item>
+                      <el-form-item label="momentum">
+                        <el-input-number v-model="weight_sharing_params.momentum" :min="0" :max="1.0" :step="0.1" step-strictly size="mini" />
+                      </el-form-item>
+                      <el-form-item label="lambda_">
+                        <el-input-number v-model="weight_sharing_params.lambda_" :min="0" :max="1.0" :step="0.1" step-strictly size="mini" />
+                      </el-form-item>
+                      <el-form-item label="prop">
+                        <el-input-number v-model="weight_sharing_params.prop" :min="0" :max="1.0" :step="0.1" step-strictly size="mini" />
+                      </el-form-item>
+                    </el-col>
+                  </el-form> -->
                 </div>
               </el-main>
             </el-container>
@@ -425,10 +640,10 @@
 </template>
 <script>
 import Vue from 'vue'
-import { h } from 'vue'
+// import { h } from 'vue'
 import ComponentTree from '@/components/ComponentTree.vue'
 import splitPane from 'vue-splitpane'
-import TabPane from './TabPane'
+// import TabPane from './TabPane'
 import { getFlowChartData } from '@/api/task'
 import { taskboard_getSimples } from '@/api/minedata'
 import FlowChart from './FlowChart/index'
@@ -444,7 +659,7 @@ import * as echarts from 'echarts'
 FlowChart.use(PluginFlowExec)
 
 export default Vue.extend({
-  components: { ComponentTree, splitPane, TabPane, Pagination },
+  components: { ComponentTree, splitPane, Pagination },
   directives: { waves },
   props: {
     sidebarComponentName: String
@@ -458,100 +673,11 @@ export default Vue.extend({
       currentNodeType: '',
       isUndoDisable: true,
       isExecDisable: false,
-      dataInfo: false,
       table: true,
       tenderProjectId: '',
 
-      activeName: 'first',
-      toolBarShow: 'component',
-      modelName: '你你您',
-      modelDescription: '你你您你你您你你您你你您',
-
-      gridData: [
-        {
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }],
-      tableData: [{
-        date: '2016-05-03',
-        name: '王小虎',
-        province: '上海',
-        city: '普陀区',
-        address: '上海市普陀区金沙江路 1518 弄',
-        zip: 200333
-      }, {
-        date: '2016-05-02',
-        name: '王小虎',
-        province: '上海',
-        city: '普陀区',
-        address: '上海市普陀区金沙江路 1518 弄',
-        zip: 200333
-      }, {
-        date: '2016-05-04',
-        name: '王小虎',
-        province: '上海',
-        city: '普陀区',
-        address: '上海市普陀区金沙江路 1518 弄',
-        zip: 200333
-      }, {
-        date: '2016-05-01',
-        name: '王小虎',
-        province: '上海',
-        city: '普陀区',
-        address: '上海市普陀区金沙江路 1518 弄',
-        zip: 200333
-      }, {
-        date: '2016-05-08',
-        name: '王小虎',
-        province: '上海',
-        city: '普陀区',
-        address: '上海市普陀区金沙江路 1518 弄',
-        zip: 200333
-      }, {
-        date: '2016-05-06',
-        name: '王小虎',
-        province: '上海',
-        city: '普陀区',
-        address: '上海市普陀区金沙江路 1518 弄',
-        zip: 200333
-      }, {
-        date: '2016-05-07',
-        name: '王小虎',
-        province: '上海',
-        city: '普陀区',
-        address: '上海市普陀区金沙江路 1518 弄',
-        zip: 200333
-      }],
       tableData2: [],
       dialogTableVisible: false,
-      messagesList: [
-        {
-          time: '2019/6/5 下午3:17:29',
-          message: '当前实验中没有可回滚的节点'
-        }, {
-          time: '2019/6/5 下午3:00:25',
-          message: '模型不存在,请生成模型后重试'
-        }, {
-          time: '2019/6/5 下午3:00:17',
-          message: '实验目录不存在'
-        }, {
-          time: '2019/6/5 下午3:00:09',
-          message: '模型不存在,请生成模型后重试'
-        }
-      ],
       tabMapOptions: [
         { label: '本方数据输出', key: 'output' },
         { label: '日志', key: 'logger' },
@@ -560,17 +686,8 @@ export default Vue.extend({
       ],
       activeName2: 'CN',
       createdTimes: 0,
-      form: {
-        tolerance: 0.0001,
-        batchSize: 512,
-        learningRate: 0.01,
-        // ... 其他数据模型 ...
-        optimizer: ''
-      },
-      formInline: {
-        user: '',
-        region: ''
-      },
+      paramsForm: {},
+
       output_activeNames: ['1', '2'],
       contrast_activeNames: ['1', '2'],
       tableKey: 0,
@@ -609,9 +726,15 @@ export default Vue.extend({
         console.log(newVal)
         this.$nextTick(() => {
           // 在DOM更新完成后，初始化图表
-          this.initCharts();
-        });
+          this.initCharts()
+        })
       }
+    },
+    currentNodeId(val) {
+      // console.log('id:' + val)
+      this.paramsForm = FlowChart.getNodeParams(val)
+      // console.log(this.paramsForm)
+      // console.log()
     }
   },
   created() {
@@ -659,33 +782,19 @@ export default Vue.extend({
     // },
     execModel() {
       this.isExecDisable = true
-      FlowChart.execModel().then(() => {
+      FlowChart.runModel().then(() => {
         this.isExecDisable = false
       })
     },
     saveData() {
       const modelData = FlowChart.getModelData()
+      console.log(modelData)
       // console.log(modelData)
       this.$message.success('模型保存成功')
     },
     rowClick(val) {
       // console.log('val:' + val.name)
       this.tenderProjectId = val.name
-    },
-    renderContent(h, { node, data, store }) {
-      if (data.tableData) {
-        return (
-          <el-table
-            data={data.tableData}
-          >
-            <el-table-column prop='id' label='ID' width='180'></el-table-column>
-            <el-table-column prop='label' label='LABEL' width='180'></el-table-column>
-            {/* ... 其他列 ... */}
-          </el-table>
-        )
-      } else {
-        return <span>{node.label}</span>
-      }
     },
     getSimple() {
       taskboard_getSimples().then(response => {
@@ -888,15 +997,15 @@ export default Vue.extend({
       if (this.evaluateInfo) resizeObserver.observe(this.evaluateInfo)
     },
     initCharts() {
-      this.contrastInfo = document.getElementById('contrastInfo');
+      this.contrastInfo = document.getElementById('contrastInfo')
       if (this.contrastInfo) {
-        this.initBarChart();
+        this.initBarChart()
       }
-      this.evaluateInfo = document.getElementById('evaluateInfo');
+      this.evaluateInfo = document.getElementById('evaluateInfo')
       if (this.evaluateInfo) {
-        this.initRocChart();
+        this.initRocChart()
       }
-      this.observeContrastInfoResize(); // 设置ResizeObserver监听
+      this.observeContrastInfoResize() // 设置ResizeObserver监听
     }
   }
 })
@@ -988,24 +1097,24 @@ export default Vue.extend({
         line-height: 40px;
         text-align: center;
     }
-    .model-attr {
-        padding: 0;
-        .item {
-        font-size: 12px;
-        }
-        .value {
-        font-size: 12px;
-        color: #999;
-        margin-left: 10px;
-        }
-        .el-input {
-        margin-top: 5px;
-        }
-        textarea {
-        margin-top: 5px;
-        font-family: inherit;
-        }
-    }
+    // .model-attr {
+    //     padding: 0;
+    //     .item {
+    //     font-size: 12px;
+    //     }
+    //     .value {
+    //     font-size: 12px;
+    //     color: #999;
+    //     margin-left: 10px;
+    //     }
+    //     .el-input {
+    //     margin-top: 5px;
+    //     }
+    //     textarea {
+    //     margin-top: 5px;
+    //     font-family: inherit;
+    //     }
+    // }
     .node-attr {
         padding: 10px;
         .item {
@@ -1107,7 +1216,7 @@ export default Vue.extend({
 }
 </style>
 
-<style  scoped>
+<style scoped>
   .components-container {
     position: relative;
     /* height: 100vh; */

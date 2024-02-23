@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function getFlowChartData(id) {
   return request({
-    url: '/api/getFlowChartData',
+    url: '/taskboard/getAllinfo',
     method: 'get'
   })
 }

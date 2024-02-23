@@ -16,6 +16,12 @@ declare var FlowChart: {
 
     getModelData(): void;
 
+    getNodeParams(nodeId:string):void;
+
+    setNodeParams(nodeId:string, params:any):void;
+
+    // runModel():void;
+
     on(eventName:string, fn:Function):void;
 
     use(plugin: Function, ...args: any[]): void;
@@ -23,4 +29,4 @@ declare var FlowChart: {
     [key: string]: any; // 插件扩展
   }
 
-  export default FlowChart
+export default FlowChart

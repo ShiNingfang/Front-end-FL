@@ -10,7 +10,7 @@ module.exports = {
     es6: true,
   },
   extends: ['plugin:vue/recommended', 'eslint:recommended'],
-
+ 
   // add your custom rules here
   //it is base on https://github.com/vuejs/eslint-config-vue
   rules: {
@@ -25,6 +25,15 @@ module.exports = {
     "vue/multiline-html-element-content-newline":"off",
     "vue/name-property-casing": ["error", "PascalCase"],
     "vue/no-v-html": "off",
+    "vue/html-self-closing": ["error", {
+        "html": {
+          "void": "never",
+          "normal": "always",
+          "component": "always"
+        },
+        "svg": "always",
+        "math": "always"
+      }],
     'accessor-pairs': 2,
     'arrow-spacing': [2, {
       'before': true,
