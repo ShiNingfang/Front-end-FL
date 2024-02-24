@@ -12,3 +12,9 @@ export function getMenuData(id) {
     method: 'get'
   })
 }
+export function getMenuAttack(id) {
+  return request({
+    url: '/api/getMenuAttack',
+    method: 'get'
+  })
+}

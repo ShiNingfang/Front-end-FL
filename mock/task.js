@@ -114,11 +114,11 @@ module.exports = [
             label: '学习算法',
             id: 'learn',
             children: [{
-              label: '标准模式训练',
+              label: '标准模式',
               id: 'Normal Training',
               icon: 'el-icon-star-off'
             }, {
-              label: '差分隐私训练',
+              label: '差分隐私',
               id: 'Differential Privacy Training',
               icon: 'el-icon-star-off'
             }, {
@@ -130,11 +130,53 @@ module.exports = [
               id: 'Negative Database',
               icon: 'el-icon-star-off'
             }, {
-              label: '改进的生成对抗网络',
+              label: '优化GAN',
               id: 'Improved Generative Adversarial Networks',
               icon: 'el-icon-star-off'
             }, {
-              label: '共享权重模式协作学习',
+              label: '共享权重',
+              id: 'Weight Sharing for Collaborative Learning',
+              icon: 'el-icon-star-off'
+            }]
+          }, {
+            label: '模型对比',
+            id: 'contrast',
+            icon: 'el-icon-coin'
+          }
+        ]
+      }
+    }
+  },
+
+  // get Menu Data
+  {
+    url: '/api/getMenuAttack',
+    type: 'get',
+    response: _ => {
+      return {
+        code: 20000,
+        data: [
+          {
+            label: '数据源',
+            id: 'source',
+            icon: 'el-icon-coin'
+          }, {
+            label: '加密算法',
+            id: 'learn',
+            children: [{
+              label: '差分隐私',
+              id: 'Differential Privacy Training',
+              icon: 'el-icon-star-off'
+            }, {
+              label: '同态加密',
+              id: 'Homomorphic Encryption',
+              icon: 'el-icon-star-off'
+            }, {
+              label: '负数据库',
+              id: 'Negative Database',
+              icon: 'el-icon-star-off'
+            }, {
+              label: '共享权重',
               id: 'Weight Sharing for Collaborative Learning',
               icon: 'el-icon-star-off'
             }]

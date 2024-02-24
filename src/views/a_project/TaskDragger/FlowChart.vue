@@ -301,8 +301,8 @@
 import Vue from 'vue'
 import ComponentTree from '@/components/ComponentTree.vue'
 import { getFlowChartData } from '@/api/task'
-import FlowChart from './FlowChart/index'
-import PluginFlowExec from './FlowChart/pluginFlowExec'
+import FlowChart from '../../../utils/FlowChart/index'
+import PluginFlowExec from '../../../utils/FlowChart/pluginFlowExec'
 
 FlowChart.use(PluginFlowExec)
 
@@ -658,3 +658,4 @@ export default Vue.extend({
     padding: 0,
   }
   </style>
+../../../utils/FlowChart/index../../../utils/FlowChart/pluginFlowExec

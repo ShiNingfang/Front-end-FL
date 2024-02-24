@@ -20,6 +20,8 @@ declare var FlowChart: {
 
     setNodeParams(nodeId:string, params:any):void;
 
+    getNode(nodeId:string):void;
+
     // runModel():void;
 
     on(eventName:string, fn:Function):void;

@@ -13,7 +13,7 @@ import { CONNECTORSEPARATESYMBOL } from './const'
 import exec, { AddConnectorCommand, MoveNodeCommand } from './Command'
 
 let container = null
-const algorithmList = ['标准模式训练', '差分隐私训练', '负数据库', '改进的生成对抗网络', '共享权重模式协作学习', '同态加密']
+const algorithmList = ['标准模式', '差分隐私', '负数据库', '优化GAN', '共享权重', '同态加密']
 
 // const rootNodeId = model.getHead()
 // const nodesData = model.getData().nodes // 获取节点数组
@@ -324,7 +324,7 @@ function addNodeByDrag(position, elId) {
 
   let params = {}
 
-  if (type === '标准模式训练') {
+  if (type === '标准模式') {
     params = {
       choice: 0,
       no_models: 5,
@@ -339,7 +339,7 @@ function addNodeByDrag(position, elId) {
       lambda_: 0.1,
       prop: 0.6
     }
-  } else if (type === '差分隐私训练') {
+  } else if (type === '差分隐私') {
     params = {
       choice: 1,
       no_models: 5,
@@ -388,7 +388,7 @@ function addNodeByDrag(position, elId) {
       lambda_: 0.1,
       prop: 0.6
     }
-  } else if (type === '改进的生成对抗网络') {
+  } else if (type === '优化GAN') {
     params = {
       choice: 4,
       no_models: 5,
@@ -403,7 +403,7 @@ function addNodeByDrag(position, elId) {
       lambda_: 0.1,
       prop: 0.6
     }
-  } else if (type === '共享权重模式协作学习') {
+  } else if (type === '共享权重') {
     params = {
       choice: 5,
       no_models: 5,

@@ -83,6 +83,10 @@ const FlowChart = {
   setNodeParams(nodeId, params) {
     model.getData().nodes.find(node => node.id === nodeId).data.params = params
   },
+
+  getNode(nodeId) {
+    return model.getData().nodes.find(node => node.id === nodeId)
+  },
   /**
    * @description 插件扩展
    * @param {*} plugin 插件函数

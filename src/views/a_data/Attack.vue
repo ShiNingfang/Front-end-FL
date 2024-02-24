@@ -2,7 +2,7 @@
   <div class="components-container">
     <split-pane class="flowChartWrap" :min-percent="5" :default-percent="17" split="vertical">
       <!-- <div slot="paneL" class="left-container" /> -->
-      <ComponentTree slot="paneL" style="width: auto;" />
+      <AttackTree slot="paneL" style="width: auto;" />
       <split-pane slot="paneR" class="flowChartWrap" :default-percent="node_outerSplitPaneSize" split="vertical">
         <el-main slot="paneL">
           <el-container>
@@ -163,13 +163,15 @@
                         highlight-current-row
                         stripe
                         @row-click="rowClick"
-                        @selection-change="handleSelectionChange"
                       >
-                        <el-table-column
-                          type="selection"
-                          width="55"
-                          align="center"
-                        />
+                        <el-table-column label="选择" width="55" align="center">
+                          <template slot-scope="scope">
+                            <el-radio
+                              v-model="tenderProjectId"
+                              :label="scope.row.name"
+                            >{{ '' }}</el-radio>
+                          </template>
+                        </el-table-column>
                         <el-table-column
                           prop="name"
                           label="样本名称"
@@ -191,7 +193,6 @@
                           show-overflow-tooltip
                         />
                       </el-table>
-
                     </div>
                   </div>
                   <el-form v-if="currentNodeType === '标准模式训练' || currentNodeType === '负数据库' || currentNodeType === '改进的生成对抗网络' || currentNodeType === '共享权重模式协作学习'" :model="paramsForm" class="demo-form-inline" style="height:100%; padding-right:20px;" label-width="100px">
@@ -201,20 +202,16 @@
                       </el-form-item>
                       <el-form-item label="model_name">
                         <el-select v-model="paramsForm.model_name" placeholder="请选择" size="mini">
-                          <el-option label="resnet18" value="resnet18" />
                           <el-option label="resnet50" value="resnet50" />
-                          <el-option label="densenet121" value="densenet121" />
-                          <el-option label="alexnet" value="alexnet" />
                           <el-option label="vgg16" value="vgg16" />
-                          <el-option label="vgg19" value="vgg19" />
-                          <el-option label="inception_v3" value="inception_v3" />
-                          <el-option label="googlenet" value="googlenet" />
+                          <el-option label="inception" value="inception" />
                         </el-select>
                       </el-form-item>
                       <el-form-item label="type">
                         <el-select v-model="paramsForm.type" placeholder="请选择" size="mini">
                           <el-option label="cifar" value="cifar" />
                           <el-option label="mnist" value="mnist" />
+                          <el-option label="imagenet" value="imagenet" />
                         </el-select>
                       </el-form-item>
                       <el-form-item label="global_epochs">
@@ -252,21 +249,16 @@
                       </el-form-item>
                       <el-form-item label="model_name">
                         <el-select v-model="paramsForm.model_name" placeholder="请选择" size="mini">
-                          <el-option label="resnet18" value="resnet18" />
                           <el-option label="resnet50" value="resnet50" />
-                          <el-option label="densenet121" value="densenet121" />
-                          <el-option label="alexnet" value="alexnet" />
                           <el-option label="vgg16" value="vgg16" />
-                          <el-option label="vgg19" value="vgg19" />
-                          <el-option label="inception_v3" value="inception_v3" />
-                          <el-option label="googlenet" value="googlenet" />
-
+                          <el-option label="inception" value="inception" />
                         </el-select>
                       </el-form-item>
                       <el-form-item label="type">
                         <el-select v-model="paramsForm.type" placeholder="请选择" size="mini">
                           <el-option label="cifar" value="cifar" />
                           <el-option label="mnist" value="mnist" />
+                          <el-option label="imagenet" value="imagenet" />
                         </el-select>
                       </el-form-item>
                       <el-form-item label="global_epochs">
@@ -348,6 +340,148 @@
                       </el-form-item>
                     </el-col>
                   </el-form>
+
+                  <!-- <el-form v-if="currentNodeType === '负数据库'" :model="negative_database_params" class="demo-form-inline" style="height:100%; padding-right:20px;" label-width="100px">
+                    <el-col :span="12">
+                      <el-form-item label="no_models">
+                        <el-input-number v-model="negative_database_params.no_models" :min="1" :step="1" step-strictly size="mini" style="vertical-align: middle;" />
+                      </el-form-item>
+                      <el-form-item label="model_name">
+                        <el-select v-model="negative_database_params.model_name" placeholder="请选择" size="mini">
+                          <el-option label="resnet50" value="resnet50" />
+                          <el-option label="vgg16" value="vgg16" />
+                          <el-option label="inception" value="inception" />
+                        </el-select>
+                      </el-form-item>
+                      <el-form-item label="type">
+                        <el-select v-model="negative_database_params.type" placeholder="请选择" size="mini">
+                          <el-option label="cifar" value="cifar" />
+                          <el-option label="mnist" value="mnist" />
+                          <el-option label="imagenet" value="imagenet" />
+                        </el-select>
+                      </el-form-item>
+                      <el-form-item label="global_epochs">
+                        <el-input-number v-model="negative_database_params.global_epochs" :min="1" :step="1" step-strictly size="mini" />
+                      </el-form-item>
+                      <el-form-item label="local_epochs">
+                        <el-input-number v-model="negative_database_params.local_epochs" :min="1" :step="1" step-strictly size="mini" />
+                      </el-form-item>
+                      <el-form-item label="batch_size">
+                        <el-input-number v-model="negative_database_params.batch_size" :min="1" :step="1" step-strictly size="mini" />
+                      </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                      <el-form-item label="k">
+                        <el-input-number v-model="negative_database_params.k" :min="1" :max="negative_database_params.no_models" :step="1" step-strictly size="mini" />
+                      </el-form-item>
+                      <el-form-item label="lr">
+                        <el-input-number v-model="negative_database_params.lr" :min="0.001" :max="1.0" :step="0.001" step-strictly size="mini" />
+                      </el-form-item>
+                      <el-form-item label="momentum">
+                        <el-input-number v-model="negative_database_params.momentum" :min="0" :max="1.0" :step="0.1" step-strictly size="mini" />
+                      </el-form-item>
+                      <el-form-item label="lambda_">
+                        <el-input-number v-model="negative_database_params.lambda_" :min="0" :max="1.0" :step="0.1" step-strictly size="mini" />
+                      </el-form-item>
+                      <el-form-item label="prop">
+                        <el-input-number v-model="negative_database_params.prop" :min="0" :max="1.0" :step="0.1" step-strictly size="mini" />
+                      </el-form-item>
+                    </el-col>
+                  </el-form>
+                  <el-form v-if="currentNodeType === '改进的生成对抗网络'" :model="improved_gan_params" class="demo-form-inline" style="height:100%; padding-right:20px;" label-width="100px">
+                    <el-col :span="12">
+                      <el-form-item label="no_models">
+                        <el-input-number v-model="improved_gan_params.no_models" :min="1" :step="1" step-strictly size="mini" style="vertical-align: middle;" />
+                      </el-form-item>
+                      <el-form-item label="model_name">
+                        <el-select v-model="improved_gan_params.model_name" placeholder="请选择" size="mini">
+                          <el-option label="resnet50" value="resnet50" />
+                          <el-option label="vgg16" value="vgg16" />
+                          <el-option label="inception" value="inception" />
+                        </el-select>
+                      </el-form-item>
+                      <el-form-item label="type">
+                        <el-select v-model="improved_gan_params.type" placeholder="请选择" size="mini">
+                          <el-option label="cifar" value="cifar" />
+                          <el-option label="mnist" value="mnist" />
+                          <el-option label="imagenet" value="imagenet" />
+                        </el-select>
+                      </el-form-item>
+                      <el-form-item label="global_epochs">
+                        <el-input-number v-model="improved_gan_params.global_epochs" :min="1" :step="1" step-strictly size="mini" />
+                      </el-form-item>
+                      <el-form-item label="local_epochs">
+                        <el-input-number v-model="improved_gan_params.local_epochs" :min="1" :step="1" step-strictly size="mini" />
+                      </el-form-item>
+                      <el-form-item label="batch_size">
+                        <el-input-number v-model="improved_gan_params.batch_size" :min="1" :step="1" step-strictly size="mini" />
+                      </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                      <el-form-item label="k">
+                        <el-input-number v-model="improved_gan_params.k" :min="1" :max="improved_gan_params.no_models" :step="1" step-strictly size="mini" />
+                      </el-form-item>
+                      <el-form-item label="lr">
+                        <el-input-number v-model="improved_gan_params.lr" :min="0.001" :max="1.0" :step="0.001" step-strictly size="mini" />
+                      </el-form-item>
+                      <el-form-item label="momentum">
+                        <el-input-number v-model="improved_gan_params.momentum" :min="0" :max="1.0" :step="0.1" step-strictly size="mini" />
+                      </el-form-item>
+                      <el-form-item label="lambda_">
+                        <el-input-number v-model="improved_gan_params.lambda_" :min="0" :max="1.0" :step="0.1" step-strictly size="mini" />
+                      </el-form-item>
+                      <el-form-item label="prop">
+                        <el-input-number v-model="improved_gan_params.prop" :min="0" :max="1.0" :step="0.1" step-strictly size="mini" />
+                      </el-form-item>
+                    </el-col>
+                  </el-form>
+                  <el-form v-if="currentNodeType === '共享权重模式协作学习'" :model="weight_sharing_params" class="demo-form-inline" style="height:100%; padding-right:20px;" label-width="100px">
+                    <el-col :span="12">
+                      <el-form-item label="no_models">
+                        <el-input-number v-model="weight_sharing_params.no_models" :min="1" :step="1" step-strictly size="mini" style="vertical-align: middle;" />
+                      </el-form-item>
+                      <el-form-item label="model_name">
+                        <el-select v-model="weight_sharing_params.model_name" placeholder="请选择" size="mini">
+                          <el-option label="resnet50" value="resnet50" />
+                          <el-option label="vgg16" value="vgg16" />
+                          <el-option label="inception" value="inception" />
+                        </el-select>
+                      </el-form-item>
+                      <el-form-item label="type">
+                        <el-select v-model="weight_sharing_params.type" placeholder="请选择" size="mini">
+                          <el-option label="cifar" value="cifar" />
+                          <el-option label="mnist" value="mnist" />
+                          <el-option label="imagenet" value="imagenet" />
+                        </el-select>
+                      </el-form-item>
+                      <el-form-item label="global_epochs">
+                        <el-input-number v-model="weight_sharing_params.global_epochs" :min="1" :step="1" step-strictly size="mini" />
+                      </el-form-item>
+                      <el-form-item label="local_epochs">
+                        <el-input-number v-model="weight_sharing_params.local_epochs" :min="1" :step="1" step-strictly size="mini" />
+                      </el-form-item>
+                      <el-form-item label="batch_size">
+                        <el-input-number v-model="weight_sharing_params.batch_size" :min="1" :step="1" step-strictly size="mini" />
+                      </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                      <el-form-item label="k">
+                        <el-input-number v-model="weight_sharing_params.k" :min="1" :max="weight_sharing_params.no_models" :step="1" step-strictly size="mini" />
+                      </el-form-item>
+                      <el-form-item label="lr">
+                        <el-input-number v-model="weight_sharing_params.lr" :min="0.001" :max="1.0" :step="0.001" step-strictly size="mini" />
+                      </el-form-item>
+                      <el-form-item label="momentum">
+                        <el-input-number v-model="weight_sharing_params.momentum" :min="0" :max="1.0" :step="0.1" step-strictly size="mini" />
+                      </el-form-item>
+                      <el-form-item label="lambda_">
+                        <el-input-number v-model="weight_sharing_params.lambda_" :min="0" :max="1.0" :step="0.1" step-strictly size="mini" />
+                      </el-form-item>
+                      <el-form-item label="prop">
+                        <el-input-number v-model="weight_sharing_params.prop" :min="0" :max="1.0" :step="0.1" step-strictly size="mini" />
+                      </el-form-item>
+                    </el-col>
+                  </el-form> -->
                 </div>
               </el-main>
             </el-container>
@@ -513,14 +647,13 @@
 <script>
 import Vue from 'vue'
 // import { h } from 'vue'
-import ComponentTree from '@/components/ComponentTree.vue'
+import AttackTree from '@/components/AttackTree.vue'
 import splitPane from 'vue-splitpane'
 // import TabPane from './TabPane'
 import { getFlowChartData } from '@/api/task'
 import { taskboard_getSimples } from '@/api/minedata'
-// import FlowChart from './FlowChart/index'
-import FlowChart from '../../../utils/FlowChart/index'
-import PluginFlowExec from '../../../utils/FlowChart/pluginFlowExec'
+import FlowChart from '../../utils/FlowChart/index'
+import PluginFlowExec from '../../utils/FlowChart/pluginFlowExec'
 
 import { fetchList } from '@/api/minedata'
 import waves from '@/directive/waves' // waves directive
@@ -532,7 +665,7 @@ import * as echarts from 'echarts'
 FlowChart.use(PluginFlowExec)
 
 export default Vue.extend({
-  components: { ComponentTree, splitPane, Pagination },
+  components: { AttackTree, splitPane, Pagination },
   directives: { waves },
   props: {
     sidebarComponentName: String

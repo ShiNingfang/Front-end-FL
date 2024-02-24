@@ -104,6 +104,29 @@ export const constantRoutes = [
 export const asyncRoutes = [
   /** when your routing map is too long, you can split it into small modules **/
   {
+    path: '/attack',
+    component: Layout,
+    redirect: '/attack/item',
+    name: 'Attack',
+    meta: {
+      title: '攻击模拟',
+      icon: 'clipboard'
+    },
+    children: [
+      {
+        hidden: true,
+        path: 'item',
+        component: () => import('@/views/a_data/Attack'),
+        name: 'Attack',
+        meta: { title: '攻击模拟', icon: 'edit' }
+        // beforeEnter: (to, from, next) => {
+        //   to.meta.title = to.params.simpleName + '攻击模拟' || '攻击模拟'
+        //   next()
+        // }
+      }
+    ]
+  },
+  {
     path: '/projectManage',
     component: Layout,
     name: 'ProjectManage',

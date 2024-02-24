@@ -1,6 +1,5 @@
 import { CONNECTORSEPARATESYMBOL } from './const'
 import model from './model'
-import io from 'socket.io-client'
 
 export default function flowExec({ instance }) {
   /**
@@ -61,29 +60,22 @@ export default function flowExec({ instance }) {
       }, 5000))
   }
 
-  this.runModel = async() => {
-    async function processNode(nodeId, node) {
-      changeStateByNodeId(nodeId, 'loading')
-      // await new Promise(resolve => setTimeout(resolve, node.data.type === '数据源' ? 3000 : 4000)) // 为不同类型的节点设置不同的处理时间
-      await timeout(() => {
-        console.log(node.data.params)
-      }, 3000)
-
-      // socket
-      // 假设您的WebSocket服务端点为ws://localhost:3000
-      const socketUrl = 'ws://localhost:3000'
+  this.runModel = async(store) => {
+    function openSocket() {
+      const socketUrl = 'ws://localhost:8080'
       const socket = new WebSocket(socketUrl)
 
       // 打开WebSocket连接后执行的操作
       socket.onopen = function(event) {
-        console.log('WebSocket connection established')
-        // 一旦连接打开，您可以发送一个消息到服务器，例如启动一个特定的日志流
-        // socket.send('start_logs');
+        console.log('ws连接成功')
       }
 
       // 接收到消息时执行的操作
       socket.onmessage = function(event) {
-        console.log('Message from server:', event.data)
+        // console.log(node.data.type + 'Message from server:', event.data)
+        store.dispatch('logger/addLog', event.data)
+        // node.data.logger = event.data
+        // console.log(node.data.type + 'logger:' + node.data.logger)
         // 在这里，您可以处理从服务器接收到的日志消息
         // 例如，更新前端的日志显示
         // updateLogs(event.data);
@@ -100,12 +92,19 @@ export default function flowExec({ instance }) {
         console.error('WebSocket error:', error)
         // 在这里，您可以处理连接过程中可能发生的任何错误
       }
-
-      changeStateByNodeId(nodeId, 'success')
-      // console.log('Node processing complete:', nodeId)
     }
 
-    async function breadthFirstTraversal(rootId, nodes, edges, visited = new Set()) {
+    async function processNode(nodeId, node, store) {
+      changeStateByNodeId(nodeId, 'loading')
+      // await new Promise(resolve => setTimeout(resolve, node.data.type === '数据源' ? 3000 : 4000)) // 为不同类型的节点设置不同的处理时间
+      await timeout(() => {
+        // console.log(node.data.params)
+      }, 1000)
+
+      changeStateByNodeId(nodeId, 'success')
+    }
+
+    async function breadthFirstTraversal(rootId, nodes, edges, store, visited = new Set()) {
       const result = []
       const queue = [rootId]
 
@@ -116,7 +115,7 @@ export default function flowExec({ instance }) {
           continue
         }
 
-        await processNode(nodeId, node) // 等待节点处理完成
+        await processNode(nodeId, node, store) // 等待节点处理完成
         visited.add(nodeId)
         result.push(node.id)
 
@@ -138,6 +137,8 @@ export default function flowExec({ instance }) {
     const rootNodeId = model.getHead()
     const nodesData = model.getData().nodes
     const edges = model.getData().edges
-    await breadthFirstTraversal(rootNodeId, nodesData, edges)
+    openSocket()
+    // console.log(store)
+    await breadthFirstTraversal(rootNodeId, nodesData, edges, store)
   }
 }

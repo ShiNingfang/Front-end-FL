@@ -87,6 +87,9 @@
           <el-button size="mini" type="danger" @click="handleDelete(row,$index)">
             删除
           </el-button>
+          <el-button size="mini" type="success" @click="handleAttack(row)">
+            攻击模拟
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -368,6 +371,13 @@ export default {
         })
         this.list.splice(index, 1)
       })
+    },
+    // 攻击模拟函数
+    handleAttack(row) {
+      // 打开另一个页面
+      if (row && row.name) {
+        this.$router.push({ path: `/Data/mine/${row.name}` })
+      }
     },
     handleFetchPv(pv) {
       // fetchPv(pv).then(response => {
