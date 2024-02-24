@@ -194,7 +194,7 @@
 
                     </div>
                   </div>
-                  <el-form v-if="currentNodeType === '标准模式训练' || currentNodeType === '负数据库' || currentNodeType === '改进的生成对抗网络' || currentNodeType === '共享权重模式协作学习'" :model="paramsForm" class="demo-form-inline" style="height:100%; padding-right:20px;" label-width="100px">
+                  <el-form v-if="currentNodeType === '标准模式' || currentNodeType === '负数据库' || currentNodeType === '优化GAN' || currentNodeType === '共享权重'" :model="paramsForm" class="demo-form-inline" style="height:100%; padding-right:20px;" label-width="100px">
                     <el-col :span="12">
                       <el-form-item label="no_models">
                         <el-input-number v-model="paramsForm.no_models" :min="1" :step="1" step-strictly size="mini" style="vertical-align: middle;" />
@@ -245,7 +245,7 @@
                       </el-form-item>
                     </el-col>
                   </el-form>
-                  <el-form v-if="currentNodeType === '差分隐私训练'" :model="paramsForm" class="demo-form-inline" style="height:100%; padding-right:20px;" label-width="100px">
+                  <el-form v-if="currentNodeType === '差分隐私'" :model="paramsForm" class="demo-form-inline" style="height:100%; padding-right:20px;" label-width="100px">
                     <el-col :span="12">
                       <el-form-item label="no_models">
                         <el-input-number v-model="paramsForm.no_models" :min="1" :step="1" step-strictly size="mini" />
