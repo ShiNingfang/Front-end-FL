@@ -63,7 +63,7 @@ export default function flowExec({ instance }) {
 
   this.runModel = async(store) => {
     function handleNode(socket, params) {
-      socket.emit('train', { params: params })
+      socket.emit('attack', { params: params })
     }
     function setSocket(socket) {
       // Socket.IO 自动处理连接，所以不需要特别监听open事件
@@ -71,10 +71,11 @@ export default function flowExec({ instance }) {
       // 监听服务器发送的消息
 
       // 监听 'train_output' 事件
-      socket.on('train_output', (data) => {
+      socket.on('attack_output', (data) => {
         // data 是从服务器发送的包含消息的对象
         console.log('Received train_output:', data.output)
-        store.dispatch('logger/addLog', data.output)
+        store.dispatch('attack_logger/addLog', data.output)
+        console.log('attack_store:' + store.getters.attack_logs)
       })
 
       // Socket.IO 也自动处理连接关闭和错误

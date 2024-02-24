@@ -11,6 +11,7 @@ const getters = {
   roles: state => state.user.roles,
   permission_routes: state => state.permission.routes,
   errorLogs: state => state.errorLog.logs,
-  logs: state => state.logger.logs // 获取所有日志
+  logs: state => state.logger.logs, // 获取所有日志
+  attack_logs: state => state.attack_logger.logs // 获取所有日志
 }
 export default getters

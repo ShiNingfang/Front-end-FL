@@ -487,8 +487,8 @@ import splitPane from 'vue-splitpane'
 // import TabPane from './TabPane'
 import { getFlowChartData } from '@/api/task'
 import { taskboard_getSimples } from '@/api/minedata'
-import FlowChart from '../../utils/FlowChart/index'
-import PluginFlowExec from '../../utils/FlowChart/pluginFlowExec'
+import FlowChart from '../../utils/AttackFlow/index'
+import PluginFlowExec from '../../utils/AttackFlow/pluginFlowExec'
 
 import { fetchList } from '@/api/minedata'
 import waves from '@/directive/waves' // waves directive
@@ -559,7 +559,8 @@ export default Vue.extend({
       return this.isShowTab ? 60 : 100 // 60 100
     },
     logMessages() {
-      return this.$store.getters.logs
+      console.log('logMessages : ' + this.$store.getters.attack_logs)
+      return this.$store.getters.attack_logs
     }
   },
   watch: {
