@@ -83,8 +83,33 @@ io.on('connection', (socket) => {
     let counter = 0
     const trainInterval = setInterval(() => {
       socket.emit('train_output', { output: `Train log message ${++counter}` })
-      if (counter >= 10) clearInterval(trainInterval) // 停止发送消息
+      if (counter >= 3) clearInterval(trainInterval) // 停止发送消息
     }, 1000)
+
+    // 模拟训练过程和结果
+    setTimeout(() => {
+      // 定义随机长度，例如，从5到20之间
+      const length = Math.floor(Math.random() * (20 - 5 + 1) + 5)
+
+      // 初始化准确率和损失值数组
+      const acc = []
+      const loss = []
+
+      // 填充数组
+      for (let i = 0; i < length; i++) {
+        acc.push((Math.random()).toFixed(2)) // 随机准确率，保留两位小数
+        loss.push((Math.random()).toFixed(2)) // 随机损失值，保留两位小数
+      }
+
+      // 假装这是训练过程产生的结果
+      const mockResult = {
+        acc, // 准确率数组
+        loss // 损失值数组
+      }
+
+      // 向客户端发送train_result事件和模拟的结果数据
+      socket.emit('train_result', mockResult)
+    }, 3000) // 假设训练需要3秒钟
   })
 
   socket.on('disconnect', () => {
@@ -92,7 +117,7 @@ io.on('connection', (socket) => {
   })
 })
 
-const PORT = 8080 // 可以根据需要更改端口
+const PORT = 3000 // 可以根据需要更改端口
 server.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`)
 })

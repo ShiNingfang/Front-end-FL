@@ -92,7 +92,6 @@ module.exports = [
           edges: [
             // 'source1&&target1', 'source2&&target2', 'source3&&ccc111', 'source3&&ccc222'
           ] // 边的对应关系(sourceId -> targetId)
-          // head: 'aaa'
         }
       }
     }

@@ -22,6 +22,8 @@ declare var FlowChart: {
 
     getNode(nodeId:string):void;
 
+    getCompletedModel():void;
+
     // runModel():void;
 
     on(eventName:string, fn:Function):void;

@@ -84,6 +84,10 @@ const FlowChart = {
     model.getData().nodes.find(node => node.id === nodeId).data.params = params
   },
 
+  getCompletedModel() {
+    return model.getData().nodes.filter(node => node.data.nodeState === 'success')
+  },
+
   getNode(nodeId) {
     return model.getData().nodes.find(node => node.id === nodeId)
   },
