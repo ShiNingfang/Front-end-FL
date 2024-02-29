@@ -5,7 +5,7 @@
         <i slot="prefix" class="el-input__icon el-icon-search" />
       </el-input>
     </div>
-    <el-tree ref="tree2" :data="nodeData" node-key="id" :default-expanded-keys="['source','preHandle','sign','learn']" icon-class="el-icon-arrow-right" :render-content="renderContentFunction" :filter-node-method="filterNode" :props="defaultProps" />
+    <el-tree ref="tree2" :data="nodeData" node-key="id" :default-expanded-keys="['source','learn','attack']" icon-class="el-icon-arrow-right" :render-content="renderContentFunction" :filter-node-method="filterNode" :props="defaultProps" />
   </el-aside>
 </template>
 

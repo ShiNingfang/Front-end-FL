@@ -150,160 +150,7 @@
                 <div class="title">参数配置-{{ currentNodeType }}</div>
                 <div class="model-attr">
                   <!-- 数据源 -->
-                  <el-form v-if="currentNodeType === '标准模式' || currentNodeType === '负数据库' || currentNodeType === '优化GAN' || currentNodeType === '共享权重'" :model="paramsForm" class="demo-form-inline" style="height:100%; padding-right:20px;" label-width="100px">
-                    <el-col class="leftForm" :span="12">
-                      <el-form-item label="no_models">
-                        <el-input-number v-model="paramsForm.no_models" :min="1" :step="1" step-strictly size="mini" style="vertical-align: middle;" />
-                      </el-form-item>
-                      <el-form-item label="model_name">
-                        <el-select v-model="paramsForm.model_name" placeholder="请选择" size="mini">
-                          <el-option label="resnet18" value="resnet18" />
-                          <el-option label="resnet50" value="resnet50" />
-                          <el-option label="densenet121" value="densenet121" />
-                          <el-option label="alexnet" value="alexnet" />
-                          <el-option label="vgg16" value="vgg16" />
-                          <el-option label="vgg19" value="vgg19" />
-                          <el-option label="inception_v3" value="inception_v3" />
-                          <el-option label="googlenet" value="googlenet" />
-                        </el-select>
-                      </el-form-item>
-                      <el-form-item label="type">
-                        <el-select v-model="paramsForm.type" placeholder="请选择" size="mini">
-                          <el-option label="cifar" value="cifar" />
-                          <el-option label="mnist" value="mnist" />
-                        </el-select>
-                      </el-form-item>
-                      <el-form-item label="global_epochs">
-                        <el-input-number v-model="paramsForm.global_epochs" :min="1" :step="1" step-strictly size="mini" />
-                      </el-form-item>
-                      <el-form-item label="local_epochs">
-                        <el-input-number v-model="paramsForm.local_epochs" :min="1" :step="1" step-strictly size="mini" />
-                      </el-form-item>
-                      <el-form-item label="batch_size">
-                        <el-input-number v-model="paramsForm.batch_size" :min="1" :step="1" step-strictly size="mini" />
-                      </el-form-item>
-                    </el-col>
-                    <el-col class="rightForm" :span="12">
-                      <el-form-item label="k">
-                        <el-input-number v-model="paramsForm.k" :min="1" :max="paramsForm.no_models" :step="1" step-strictly size="mini" />
-                      </el-form-item>
-                      <el-form-item label="lr">
-                        <el-input-number v-model="paramsForm.lr" :min="0.001" :max="1.0" :step="0.001" step-strictly size="mini" />
-                      </el-form-item>
-                      <el-form-item label="momentum">
-                        <el-input-number v-model="paramsForm.momentum" :min="0" :max="1.0" :step="0.1" step-strictly size="mini" />
-                      </el-form-item>
-                      <el-form-item label="lambda_">
-                        <el-input-number v-model="paramsForm.lambda_" :min="0" :max="1.0" :step="0.1" step-strictly size="mini" />
-                      </el-form-item>
-                      <el-form-item label="prop">
-                        <el-input-number v-model="paramsForm.prop" :min="0" :max="1.0" :step="0.1" step-strictly size="mini" />
-                      </el-form-item>
-                    </el-col>
-                  </el-form>
-                  <el-form v-else-if="currentNodeType === '差分隐私'" :model="paramsForm" class="demo-form-inline" style="height:100%; padding-right:20px;" label-width="100px">
-                    <el-col class="leftForm" :span="12">
-                      <el-form-item label="no_models">
-                        <el-input-number v-model="paramsForm.no_models" :min="1" :step="1" step-strictly size="mini" />
-                      </el-form-item>
-                      <el-form-item label="model_name">
-                        <el-select v-model="paramsForm.model_name" placeholder="请选择" size="mini">
-                          <el-option label="resnet18" value="resnet18" />
-                          <el-option label="resnet50" value="resnet50" />
-                          <el-option label="densenet121" value="densenet121" />
-                          <el-option label="alexnet" value="alexnet" />
-                          <el-option label="vgg16" value="vgg16" />
-                          <el-option label="vgg19" value="vgg19" />
-                          <el-option label="inception_v3" value="inception_v3" />
-                          <el-option label="googlenet" value="googlenet" />
-                        </el-select>
-                      </el-form-item>
-                      <el-form-item label="type">
-                        <el-select v-model="paramsForm.type" placeholder="请选择" size="mini">
-                          <el-option label="cifar" value="cifar" />
-                          <el-option label="mnist" value="mnist" />
-                        </el-select>
-                      </el-form-item>
-                      <el-form-item label="global_epochs">
-                        <el-input-number v-model="paramsForm.global_epochs" :min="1" :step="1" step-strictly size="mini" />
-                      </el-form-item>
-                      <el-form-item label="local_epochs">
-                        <el-input-number v-model="paramsForm.local_epochs" :min="1" :step="1" step-strictly size="mini" />
-                      </el-form-item>
-                      <el-form-item label="batch_size">
-                        <el-input-number v-model="paramsForm.batch_size" :min="1" :step="1" step-strictly size="mini" />
-                      </el-form-item>
-                      <el-form-item label="k">
-                        <el-input-number v-model="paramsForm.k" :min="1" :max="paramsForm.no_models" :step="1" size="mini" />
-                      </el-form-item>
-                      <el-form-item label="lr">
-                        <el-input-number v-model="paramsForm.lr" :min="0.001" :max="1.0" :step="0.001" size="mini" />
-                      </el-form-item>
-                    </el-col>
-                    <el-col class="rightForm" :span="12">
-                      <el-form-item label="momentum">
-                        <el-input-number v-model="paramsForm.momentum" :min="0" :max="1.0" :step="0.1" size="mini" />
-                      </el-form-item>
-                      <el-form-item label="lambda_">
-                        <el-input-number v-model="paramsForm.lambda_" :min="0" :max="1.0" :step="0.1" size="mini" />
-                      </el-form-item>
-                      <el-form-item label="prop">
-                        <el-input-number v-model="paramsForm.prop" :min="0" :max="1.0" :step="0.1" size="mini" />
-                      </el-form-item>
-                      <el-form-item label="dp">
-                        <el-switch v-model="paramsForm.dp" active-color="#13ce66" inactive-color="#ff4949" />
-                      </el-form-item>
-                      <el-form-item label="C">
-                        <el-input-number v-model="paramsForm.C" :min="0" size="mini" />
-                      </el-form-item>
-                      <el-form-item label="sigma">
-                        <el-input-number v-model="paramsForm.sigma" :min="0" :step="0.01" size="mini" />
-                      </el-form-item>
-                      <el-form-item label="q">
-                        <el-input-number v-model="paramsForm.q" :min="0" :max="1.0" :step="0.1" size="mini" />
-                      </el-form-item>
-                      <el-form-item label="w">
-                        <el-input-number v-model="paramsForm.w" :step="1" step-strictly size="mini" />
-                      </el-form-item>
-                    </el-col>
-                  </el-form>
-                  <el-form v-else-if="currentNodeType === '同态加密'" :model="paramsForm" class="demo-form-inline" style="height:100%; padding-right:20px;" label-width="100px">
-                    <el-col class="leftForm" :span="12">
-                      <el-form-item label="no_models">
-                        <el-input-number v-model="paramsForm.no_models" :min="1" :step="1" step-strictly size="mini" style="vertical-align: middle;" />
-                      </el-form-item>
-                      <el-form-item label="global_epochs">
-                        <el-input-number v-model="paramsForm.global_epochs" :min="1" :step="1" step-strictly size="mini" />
-                      </el-form-item>
-                      <el-form-item label="local_epochs">
-                        <el-input-number v-model="paramsForm.local_epochs" :min="1" :step="1" step-strictly size="mini" />
-                      </el-form-item>
-                      <el-form-item label="batch_size">
-                        <el-input-number v-model="paramsForm.batch_size" :min="1" :step="1" step-strictly size="mini" />
-                      </el-form-item>
-                      <el-form-item label="k">
-                        <el-input-number v-model="paramsForm.k" :min="1" :max="paramsForm.no_models" :step="1" step-strictly size="mini" />
-                      </el-form-item>
-                    </el-col>
-                    <el-col class="rightForm" :span="12">
-                      <el-form-item label="lr">
-                        <el-input-number v-model="paramsForm.lr" :min="0.001" :max="1.0" :step="0.001" step-strictly size="mini" />
-                      </el-form-item>
-                      <el-form-item label="momentum">
-                        <el-input-number v-model="paramsForm.momentum" :min="0" :max="1.0" :step="0.1" step-strictly size="mini" />
-                      </el-form-item>
-                      <el-form-item label="lambda_">
-                        <el-input-number v-model="paramsForm.lambda_" :min="0" :max="1.0" :step="0.1" step-strictly size="mini" />
-                      </el-form-item>
-                      <el-form-item label="prop">
-                        <el-input-number v-model="paramsForm.prop" :min="0" :max="1.0" :step="0.1" step-strictly size="mini" />
-                      </el-form-item>
-                      <el-form-item label="feature_num">
-                        <el-input-number v-model="paramsForm.feature_num" :min="1" :step="1" step-strictly size="mini" />
-                      </el-form-item>
-                    </el-col>
-                  </el-form>
-                  <div v-else style="height: 100%;">
+                  <div style="height: 100%;">
                     <!-- <div class="title">参数配置-选择数据源样本</div> -->
                     <div class="model-attr" style="height: calc(100% - 41px);">
                       <el-table
@@ -361,88 +208,8 @@
                 {{ log }}
               </div>
             </el-tab-pane>
-            <el-tab-pane v-if="completedModelList.length > 0" id="modelResult" ref="modelResult" style="height: 100%;" label="模型对比报告" name="result">
-              <el-tabs v-model="ResultActiveName" style="margin-top:0px; height:100%; overflow-y: auto; " tab-position="left">
-                <el-tab-pane v-for="(modelNode, index) in completedModelList" :key="index" :label="modelNode.data.type" :name="modelNode.data.type">
-                  <!-- <div class="filter-container">
-                    <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">
-                      Export
-                    </el-button>
-                  </div> -->
-                  <el-table :data="allTableData[modelNode.data.type] ? allTableData[modelNode.data.type].tableData : []" border style="width: 100%;">
-                    <el-table-column prop="type" label="类型" width="100" />
-                    <el-table-column v-for="(iteration, resultIndex) in (allTableData[modelNode.data.type] ? allTableData[modelNode.data.type].iterations : [])" :key="resultIndex" :prop="iteration" :label="iteration" align="center" />
-                  </el-table>
-
-                  <!-- 柱状图 -->
-                  <!-- <div id="BarChart" style="width: 100%;height:300px; margin-top: 30px;" /> -->
-                  <div :id="'RocChart-' + modelNode.data.type" style="width: 100%;height:400px;" />
-                </el-tab-pane>
-              </el-tabs>
-              <!-- <el-collapse v-model="contrast_activeNames" @change="handleChange">
-                <el-collapse-item title="模型信息" name="1">
-                  <el-descriptions title="用户信息">
-                    <el-descriptions-item label="用户名">kooriookami</el-descriptions-item>
-                    <el-descriptions-item label="手机号">18100000000</el-descriptions-item>
-                    <el-descriptions-item label="居住地">苏州市</el-descriptions-item>
-                    <el-descriptions-item label="备注">
-                      <el-tag size="small">学校</el-tag>
-                    </el-descriptions-item>
-                    <el-descriptions-item label="联系地址">江苏省苏州市吴中区吴中大道 1188 号</el-descriptions-item>
-                  </el-descriptions>
-                </el-collapse-item>
-                <el-collapse-item v-for="(modelNode, index) in completedModelList" id="contrastInfo" :ref="modelNode.data.type" :key="index" :title="modelNode.data.type" :name="modelNode.data.type">
-                  <div class="filter-container">
-                    <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">
-                      Export
-                    </el-button>
-                  </div>
-                  <el-table
-                    :key="tableKey"
-                    v-loading="listLoading"
-                    :data="list"
-                    border
-                    fit
-                    highlight-current-row
-                    style="width: 100%;"
-                  >
-                    <el-table-column label="样本名称" prop="id" align="center" width="80">
-                      <template slot-scope="{row}">
-                        <span>{{ row.name }}</span>
-                      </template>
-                    </el-table-column>
-                    <el-table-column label="样本集" width="100px" align="center">
-                      <template slot-scope="{row}">
-                        <span>{{ row.set }}</span>
-                      </template>
-                    </el-table-column>
-                    <el-table-column label="原始文件名称" width="110px" align="center">
-                      <template slot-scope="{row}">
-                        <span>{{ row.origin_name }}</span>
-                      </template>
-                    </el-table-column>
-                    <el-table-column label="样本计数" width="100px" align="center">
-                      <template slot-scope="{row}">
-                        <span>{{ row.data_count }}</span>
-                      </template>
-                    </el-table-column>
-                    <el-table-column label="加入项目数" align="center" width="95">
-                      <template slot-scope="{row}">
-                        <span>{{ row.join_count }}</span>
-                      </template>
-                    </el-table-column>
-                    <el-table-column label="修改时间" class-name="status-col" align="center" width="140">
-                      <template slot-scope="{row}">
-                        <el-tag :type="row.status">
-                          {{ row.update_time | parseTime('{y}-{m}-{d} {h}:{i}') }}
-                        </el-tag>
-                      </template>
-                    </el-table-column>
-                  </el-table>
-
-                  <div id="BarChart" style="width: 100%;height:300px; margin-top: 30px;" />
-                </el-collapse-item>
-              </el-collapse> -->
+            <el-tab-pane id="modelResult" ref="modelResult" style="height: 100%;" label="攻击模拟结果展示" name="result">
+              <!-- <div id="RocChart" style="width: 100%;height:400px;" /> -->
             </el-tab-pane>
             <!-- <el-tab-pane label="本方数据输出" name="output">
               <el-collapse v-model="output_activeNames" @change="handleChange">
@@ -605,7 +372,7 @@ export default Vue.extend({
       return this.isShowTab ? 60 : 100 // 60 100
     },
     logMessages() {
-      console.log('logMessages : ' + this.$store.getters.attack_logs)
+      // console.log('logMessages : ' + this.$store.getters.attack_logs)
       return this.$store.getters.attack_logs
     }
   },
@@ -613,13 +380,6 @@ export default Vue.extend({
     // TabActiveName(val) {
     //   this.$router.push(`${this.$route.path}?tab=${val}`)
     // },
-    isShowTab(newVal) {
-      if (newVal === true) {
-        this.$nextTick(() => {
-          this.initCharts()
-        })
-      }
-    },
     currentNodeId(val) {
       this.paramsForm = FlowChart.getNodeParams(val)
       this.node = FlowChart.getNode(val)
@@ -654,16 +414,9 @@ export default Vue.extend({
     })
     FlowChart.on('modelCompleted', (node) => {
       const nodeType = node.data.type
-      this.completedModelList.push(node)
-      if (this.completedModelList.length === 1) {
-        this.TabActiveName = 'result'
-        this.ResultActiveName = nodeType
-      }
+      this.TabActiveName = 'result'
       console.log(node.data.result)
-      // 转换结果为表格数据并根据模型类型存储
-      this.transformResultsToTableData(nodeType, node.data.result)
-
-      // 渲染结果
+      // 渲染雷达图
       this.$nextTick(() => {
         // 渲染图表
         this.initRocChart('RocChart-' + nodeType, node.data.result)
@@ -724,55 +477,8 @@ export default Vue.extend({
         this.tableData2 = response.data
       })
     },
-    traverseGraph(data, startNodeId) {
-      const visitedNodes = new Set() // 记录已访问的节点，避免重复访问
-      const paths = [] // 存储遍历路径
-
-      // 根据源端点ID找到所有出边
-      function findEdgesBySourceId(sourceId) {
-        return data.edges.filter(edge => edge.split('&&')[0] === sourceId)
-      }
-
-      // 根据节点ID找到所有源端点
-      function findSourceEndpointsByNodeId(nodeId) {
-        const node = data.nodes.find(node => node.id === nodeId)
-        return node ? node.points.sources : []
-      }
-
-      // 遍历路径
-      function traverse(sourceId, path = []) {
-        // 记录当前路径
-        if (!visitedNodes.has(sourceId)) {
-          visitedNodes.add(sourceId)
-          path.push(sourceId)
-        }
-
-        // 找到源端点对应的所有出边
-        const sourceEndpoints = findSourceEndpointsByNodeId(sourceId)
-        sourceEndpoints.forEach(sourceEndpoint => {
-          const edges = findEdgesBySourceId(sourceEndpoint)
-          edges.forEach(edge => {
-            const targetId = edge.split('&&')[1]
-            // 递归遍历目标端点对应的节点
-            traverse(targetId, path.slice()) // 使用slice()来传递路径副本
-          })
-        })
-
-        // 如果当前节点没有出边，则认为是路径的终点
-        if (sourceEndpoints.length === 0 || findEdgesBySourceId(sourceEndpoints[0]).length === 0) {
-          paths.push(path)
-        }
-      }
-
-      // 从起点开始遍历
-      traverse(startNodeId)
-
-      // 输出遍历到的路径
-      console.log('Traversed paths:', paths)
-      return paths
-    },
     handleChange(val) {
-      console.log(val)
+      // console.log(val)
     },
     getList() {
       this.listLoading = true

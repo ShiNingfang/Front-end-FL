@@ -68,13 +68,18 @@ io.on('connection', (socket) => {
   console.log('A user connected')
 
   socket.on('attack', (data) => {
-    console.log(`Attack command received: ${data.attack_type}, ${data.choice}`)
+    console.log(`Attack 命令: ${data} `)
     // 模拟发送日志输出
     let counter = 0
     const attackInterval = setInterval(() => {
       socket.emit('attack_output', { output: `Attack log message ${++counter}` })
-      if (counter >= 10) clearInterval(attackInterval) // 停止发送消息
+      if (counter >= 3) clearInterval(attackInterval) // 停止发送消息
     }, 1000)
+    // 模拟攻击过程和结果
+    setTimeout(() => {
+      console.log('attack result send')
+      socket.emit('attack_result', '攻击结束')
+    }, 3000) // 假设训练需要3秒钟
   })
 
   socket.on('train', (data) => {

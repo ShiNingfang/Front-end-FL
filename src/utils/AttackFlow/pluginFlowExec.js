@@ -23,6 +23,7 @@ export default function flowExec({ instance }) {
     const nodeEl = document.getElementById(nodeId)
     nodeEl.vNode.$children[0].state = state
     model.setStatus(nodeId, state)
+    // console.log('Ok' + nodeId)
   }
 
   function getConnectorByUuids(uuids) {
@@ -64,22 +65,24 @@ export default function flowExec({ instance }) {
   }
 
   this.runModel = async(store) => {
-    function handleNode(socket, node) {
+    function handleNode(socket, node, params) {
       // 返回一个Promise
       return new Promise((resolve, reject) => {
-        // 发送训练命令
-        socket.emit('train', { params: node.data.params })
+        // 发送攻击命令
+        socket.emit('attack', { params: params })
+        // console.log('params', params)
 
-        // 监听一次 'train_result' 事件
-        socket.once('train_result', (data) => {
-          console.log('训练结束 : acc + ', data.acc + ', loss + ' + data.loss)
+        // 监听一次 'attack_result' 事件
+        socket.once('attack_result', (data) => {
+          // console.log('attack_result:' + data)
+          // 输出一下data
           model.setResult(node.id, data)
           resolve(data) // 解决Promise
         })
 
         // 监听错误
         socket.once('error', (error) => {
-          console.error('WebSocket error during training:', error)
+          // console.error('WebSocket error during training:', error)
           reject(error) // 拒绝Promise
         })
       })
@@ -91,21 +94,16 @@ export default function flowExec({ instance }) {
       // 监听服务器发送的消息
 
       // 监听 'train_output' 事件
-      socket.on('train_output', (data) => {
+      socket.on('attack_output', (data) => {
         // data 是从服务器发送的包含消息的对象
-        console.log('训练输出 : ', data.output)
+        // console.log('训练输出 : ', data.output)
         store.dispatch('attack_logger/addLog', data.output)
-      })
-
-      socket.on('train_result', (data) => {
-        // data 是从服务器发送的包含消息的对象
-        console.log('训练结束 : acc + ', data.acc + ', loss + ' + data.loss)
       })
 
       // Socket.IO 也自动处理连接关闭和错误
       // 但您可以监听 'disconnect' 或 'error' 事件以进行特定操作
       socket.on('disconnect', function(reason) {
-        console.log('WebSocket connection closed:', reason)
+        // console.log('WebSocket connection closed:', reason)
         // 在这里，您可以处理连接关闭后的清理工作
       })
 
@@ -114,30 +112,37 @@ export default function flowExec({ instance }) {
         // 在这里，您可以处理连接过程中可能发生的任何错误
       })
     }
-    async function processNode(nodeId, node, store, socket) {
+    async function processNode(nodeId, node, store, socket, params, context) {
       changeStateByNodeId(nodeId, 'loading')
+      // console.log('hh' + nodeId)
 
       const algorithmList = ['标准模式', '差分隐私', '负数据库', '优化GAN', '共享权重', '同态加密']
-      let isModel = false
+      const AttackList = ['梯度泄露', '成员推理', '模型逆向']
+      let isAttack = false
       if (node.data.type === '数据源') {
         await timeout(() => {
         }, 1000)
+        // console.log('数据源success')
+        changeStateByNodeId(nodeId, 'success')
       } else if (algorithmList.includes(node.data.type)) {
-        isModel = true
-        await handleNode(socket, node)
-      } else if (node.data.type === '模型对比') {
-        await timeout(() => {
-        }, 1000)
+        params.choice = node.data.params.choice
+        context.encryptId = nodeId
+      } else if (AttackList.includes(node.data.type)) {
+        isAttack = true
+        params.type = node.data.params.type
+        // console.log('handle1')
+        await handleNode(socket, node, params)
+        // console.log('handle2')
+        changeStateByNodeId(context.encryptId, 'success')
+        changeStateByNodeId(nodeId, 'success')
       }
-
-      changeStateByNodeId(nodeId, 'success')
-      if (isModel) {
+      if (isAttack) {
         FlowChart.emit('modelCompleted', node)
-        isModel = false
+        isAttack = false
       }
     }
 
-    async function breadthFirstTraversal(rootId, nodes, edges, store, socket, visited = new Set()) {
+    async function breadthFirstTraversal(rootId, nodes, edges, store, socket, params, context, visited = new Set()) {
       const result = []
       const queue = [rootId]
 
@@ -148,7 +153,7 @@ export default function flowExec({ instance }) {
           continue
         }
 
-        await processNode(nodeId, node, store, socket) // 等待节点处理完成
+        await processNode(nodeId, node, store, socket, params, context) // 等待节点处理完成
 
         visited.add(nodeId)
         result.push(node.id)
@@ -175,6 +180,8 @@ export default function flowExec({ instance }) {
     const socket = io('http://localhost:5000')
     setSocket(socket)
     // console.log(store)
-    await breadthFirstTraversal(rootNodeId, nodesData, edges, store, socket)
+    const params = {}
+    const context = { encryptId: '' }
+    await breadthFirstTraversal(rootNodeId, nodesData, edges, store, socket, params, context)
   }
 }

@@ -14,6 +14,7 @@ import exec, { AddConnectorCommand, MoveNodeCommand } from './Command'
 
 let container = null
 const algorithmList = ['标准模式', '差分隐私', '负数据库', '优化GAN', '共享权重', '同态加密']
+const AttackList = ['梯度泄露', '成员推理', '模型逆向']
 
 // const rootNodeId = model.getHead()
 // const nodesData = model.getData().nodes // 获取节点数组
@@ -252,18 +253,12 @@ function addNodeByAction(action, position, icon, value, type, params) {
   let targetEndpoints = []
   let sourceEndpoints = []
   if (type === '数据源') {
-    sourceEndpoints = [{ id: `source-source-${createUuid()}`, data: { value: '输出' }}]
+    sourceEndpoints = [{ id: `source-source-${createUuid()}`, data: { value: '加密算法' }}]
   } else if (algorithmList.includes(type)) {
-    targetEndpoints = [{ id: `model-target-${createUuid()}`, data: { value: '数据源' }}]
-    sourceEndpoints = [{ id: `model-source-${createUuid()}`, data: { value: '模型对比' }}]
-  } else if (type === '模型对比') {
-    targetEndpoints = [
-      { id: `constrast-target-${createUuid()}`, data: { value: '算法模型' }},
-      { id: `constrast-target-${createUuid()}`, data: { value: '算法模型' }},
-      { id: `constrast-target-${createUuid()}`, data: { value: '算法模型' }},
-      { id: `constrast-target-${createUuid()}`, data: { value: '算法模型' }},
-      { id: `constrast-target-${createUuid()}`, data: { value: '算法模型' }},
-      { id: `constrast-target-${createUuid()}`, data: { value: '算法模型' }}]
+    targetEndpoints = [{ id: `encrypt-target-${createUuid()}`, data: { value: '数据源' }}]
+    sourceEndpoints = [{ id: `encrypt-source-${createUuid()}`, data: { value: '攻击算法' }}]
+  } else if (AttackList.includes(type)) {
+    targetEndpoints = [{ id: `attack-target-${createUuid()}`, data: { value: '加密算法' }}]
   }
   // console.log('type2 + ' + type)
   generateNode(left, top, id, icon, type, value)
@@ -313,111 +308,65 @@ function addNodeByDrag(position, elId) {
   const contentText = copeNode.lastElementChild.innerHTML
   const type = contentText
 
+  // 什么情况不可以加节点
+  // 获取当前节点数据
   const { nodes } = model.getData()
-  for (const node of nodes) {
-    // console.log('node:' + node.data.type)
-    if (node.data.type === type) {
-      // console.log('重复node')
-      return // 找到重复节点后立即终止函数执行
-    }
+
+  // 检查是否已经存在该结点
+  if (nodes.some(node => node.data.type === type)) return
+
+  // 检查是否已经存在algorithmList中的节点类型
+  const hasAlgorithmNodeType = nodes.some(node => algorithmList.includes(node.data.type))
+
+  // 检查是否已经存在AttackList中的节点类型
+  const hasAttackNodeType = nodes.some(node => AttackList.includes(node.data.type))
+
+  // 检查新添加的节点是否属于上述两个列表之一
+  if (algorithmList.includes(type) && hasAlgorithmNodeType) {
+    // 如果新节点是算法类型，并且nodes中已存在算法类型节点，则阻止添加新节点
+    console.log('已存在算法类型节点，无法添加更多同类算法节点。')
+    return
+  }
+
+  if (AttackList.includes(type) && hasAttackNodeType) {
+    // 如果新节点是攻击类型，并且nodes中已存在攻击类型节点，则阻止添加新节点
+    console.log('已存在攻击类型节点，无法添加更多同类攻击节点。')
+    return
   }
 
   let params = {}
 
   if (type === '标准模式') {
     params = {
-      choice: 0,
-      no_models: 5,
-      model_name: 'resnet50',
-      type: 'cifar',
-      global_epochs: 5,
-      local_epochs: 1,
-      batch_size: 100,
-      k: 3,
-      lr: 0.1,
-      momentum: 0.9,
-      lambda_: 0.1,
-      prop: 0.6
+      choice: 0
     }
   } else if (type === '差分隐私') {
     params = {
-      choice: 1,
-      no_models: 5,
-      model_name: 'resnet50',
-      type: 'cifar',
-      global_epochs: 5,
-      local_epochs: 1,
-      batch_size: 100,
-      k: 3,
-      lr: 0.1,
-      momentum: 0.9,
-      lambda_: 0.1,
-      prop: 0.6,
-      dp: true,
-      C: 1000,
-      sigma: 0.01,
-      q: 0.2,
-      w: 2
+      choice: 1
     }
   } else if (type === '同态加密') {
     params = {
-      choice: 2,
-      no_models: 5,
-      global_epochs: 5,
-      local_epochs: 1,
-      batch_size: 100,
-      k: 3,
-      lr: 0.1,
-      momentum: 0.9,
-      lambda_: 0.1,
-      prop: 0.6,
-      feature_num: 30
+      choice: 2
     }
   } else if (type === '负数据库') {
     params = {
-      choice: 3,
-      no_models: 5,
-      model_name: 'resnet50',
-      type: 'cifar',
-      global_epochs: 5,
-      local_epochs: 1,
-      batch_size: 100,
-      k: 3,
-      lr: 0.1,
-      momentum: 0.9,
-      lambda_: 0.1,
-      prop: 0.6
-    }
-  } else if (type === '优化GAN') {
-    params = {
-      choice: 4,
-      no_models: 5,
-      model_name: 'resnet50',
-      type: 'cifar',
-      global_epochs: 5,
-      local_epochs: 1,
-      batch_size: 100,
-      k: 3,
-      lr: 0.1,
-      momentum: 0.9,
-      lambda_: 0.1,
-      prop: 0.6
+      choice: 3
     }
   } else if (type === '共享权重') {
     params = {
-      choice: 5,
-      no_models: 5,
-      model_name: 'resnet50',
-      type: 'cifar',
-      global_epochs: 5,
-      local_epochs: 1,
-      batch_size: 100,
-      k: 3,
-      lr: 0.1,
-      momentum: 0.9,
-      lambda_: 0.1,
-      prop: 0.6,
-      root: 'ndb_cifar10_data/'
+      choice: 5
+    }
+  } else if (type === '梯度泄露') {
+    params = {
+      type: 0
+    }
+  } else if (type === '成员推理') {
+    params = {
+      type: 1
+    }
+  } else if (type === '模型逆向') {
+    params = {
+      type: 2
     }
   }
 
@@ -601,28 +550,11 @@ function bindEvent() {
       // console.log('类型:', start_type + ', ' + end_type)
 
       execAddConnectorCommand(uuids)
-      // console.log('OK')
 
-      // const rootNodeId = model.getHead()
-      // const nodesData = model.getData().nodes // 获取节点数组
-      // const edges = model.getData().edges
-      // console.log('root: ' + rootNodeId + ', Data: ' + nodesData + ', edges: ' + edges)
-      // const traversalResult = depthFirstTraversal(rootNodeId, nodesData, edges)
-      // console.log('result: ' + traversalResult)
-
-      if ((start_type === 'source' && end_type === 'model') || (start_type === 'model' && end_type === 'constrast')) {
+      if ((start_type === 'source' && end_type === 'encrypt') || (start_type === 'encrypt' && end_type === 'attack')) {
         execAddConnectorCommand(uuids)
-        // console.log('OK')
-
-        // const rootNodeId = model.getHead()
-        // const nodesData = model.getData().nodes // 获取节点数组
-        // const edges = model.getData().edges
-        // // console.log('root: ' + rootNodeId + ', Data: ' + nodesData + ', edges: ' + edges)
-        // const traversalResult = breadthFirstTraversal(rootNodeId, nodesData, edges)
-        // console.log('result: ' + traversalResult)
       } else {
         instance.deleteConnection(info.connection)
-        // console.log('违规连线')
       }
     }
   })

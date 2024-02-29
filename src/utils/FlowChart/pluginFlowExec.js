@@ -20,6 +20,7 @@ export default function flowExec({ instance }) {
   }
 
   function changeStateByNodeId(nodeId, state) {
+    console.log(nodeId)
     const nodeEl = document.getElementById(nodeId)
     nodeEl.vNode.$children[0].state = state
     model.setStatus(nodeId, state)
@@ -116,6 +117,7 @@ export default function flowExec({ instance }) {
     }
     async function processNode(nodeId, node, store, socket) {
       changeStateByNodeId(nodeId, 'loading')
+      console.log('nn' + nodeId)
 
       const algorithmList = ['标准模式', '差分隐私', '负数据库', '优化GAN', '共享权重', '同态加密']
       let isModel = false

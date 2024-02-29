@@ -129,14 +129,16 @@ module.exports = [
               id: 'Negative Database',
               icon: 'el-icon-star-off'
             }, {
-              label: '优化GAN',
-              id: 'Improved Generative Adversarial Networks',
-              icon: 'el-icon-star-off'
-            }, {
               label: '共享权重',
               id: 'Weight Sharing for Collaborative Learning',
               icon: 'el-icon-star-off'
-            }]
+            }
+            // , {
+            //   label: '优化GAN',
+            //   id: 'Improved Generative Adversarial Networks',
+            //   icon: 'el-icon-star-off'
+            // }
+            ]
           }, {
             label: '模型对比',
             id: 'contrast',
@@ -163,6 +165,10 @@ module.exports = [
             label: '加密算法',
             id: 'learn',
             children: [{
+              label: '标准模式',
+              id: 'Normal',
+              icon: 'el-icon-star-off'
+            }, {
               label: '差分隐私',
               id: 'Differential Privacy Training',
               icon: 'el-icon-star-off'
@@ -180,10 +186,30 @@ module.exports = [
               icon: 'el-icon-star-off'
             }]
           }, {
-            label: '模型对比',
-            id: 'contrast',
-            icon: 'el-icon-coin'
+            label: '攻击算法',
+            id: 'attack',
+            children: [
+              {
+                label: '梯度泄露',
+                id: 'Gradient Leakage',
+                icon: 'el-icon-star-off'
+              },
+              {
+                label: '成员推理',
+                id: 'Membership Inference',
+                icon: 'el-icon-star-off'
+              },
+              {
+                label: '模型逆向',
+                id: 'Model Inversion',
+                icon: 'el-icon-star-off'
+              }]
           }
+          // , {
+          //   label: '模型对比',
+          //   id: 'contrast',
+          //   icon: 'el-icon-coin'
+          // }
         ]
       }
     }

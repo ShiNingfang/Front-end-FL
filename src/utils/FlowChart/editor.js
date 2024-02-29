@@ -15,10 +15,6 @@ import exec, { AddConnectorCommand, MoveNodeCommand } from './Command'
 let container = null
 const algorithmList = ['标准模式', '差分隐私', '负数据库', '优化GAN', '共享权重', '同态加密']
 
-// const rootNodeId = model.getHead()
-// const nodesData = model.getData().nodes // 获取节点数组
-// const edges = model.getData().edges
-
 /**
  * @description 触发命令列表为空事件
  */
