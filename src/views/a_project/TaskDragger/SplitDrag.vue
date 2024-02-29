@@ -146,10 +146,8 @@
           >
             <el-container id="mainNodeInfo" style="height: 100%;">
               <el-main>
-                <!-- 参数配置 -->
                 <div class="title">参数配置-{{ currentNodeType }}</div>
                 <div class="model-attr">
-                  <!-- 数据源 -->
                   <el-form v-if="currentNodeType === '标准模式' || currentNodeType === '负数据库' || currentNodeType === '优化GAN' || currentNodeType === '共享权重'" :model="paramsForm" class="demo-form-inline" style="height:100%; padding-right:20px;" label-width="100px">
                     <el-col class="leftForm" :span="12">
                       <el-form-item label="no_models">
@@ -303,48 +301,52 @@
                       </el-form-item>
                     </el-col>
                   </el-form>
+                  <!-- 数据源 -->
                   <div v-else style="height: 100%;">
                     <!-- <div class="title">参数配置-选择数据源样本</div> -->
                     <div class="model-attr" style="height: calc(100% - 41px);">
-                      <el-table
-                        ref="multipleTable"
-                        :data="tableData2"
-                        tooltip-effect="dark"
-                        style="width: 100%;"
-                        height="100%"
-                        show-overflow-tooltip
-                        highlight-current-row
-                        stripe
-                        @row-click="rowClick"
-                        @selection-change="handleSelectionChange"
-                      >
-                        <el-table-column
-                          type="selection"
-                          width="55"
-                          align="center"
-                        />
-                        <el-table-column
-                          prop="name"
-                          label="样本名称"
-                          align="center"
-                          width="100px"
-                          show-overflow-tooltip
-                        />
-                        <el-table-column
-                          prop="data_count"
-                          label="样本记录数"
-                          align="center"
-                          width="100px"
-                          show-overflow-tooltip
-                        />
-                        <el-table-column
-                          prop="description"
-                          label="描述"
-                          min-width="100px"
-                          show-overflow-tooltip
-                        />
-                      </el-table>
-
+                      <el-tabs v-model="SourceActiveName" style="margin-top:0px; height:100%; overflow-y: auto; " tab-position="left">
+                        <el-tab-pane v-for="(cooperater, index) in cooperateList" :key="index" :label="cooperater" :name="cooperater">
+                          <el-table
+                            ref="multipleTable"
+                            :data="tableData2"
+                            tooltip-effect="dark"
+                            style="width: 100%;"
+                            height="100%"
+                            show-overflow-tooltip
+                            highlight-current-row
+                            stripe
+                            @row-click="rowClick"
+                            @selection-change="handleSelectionChange"
+                          >
+                            <el-table-column
+                              type="selection"
+                              width="55"
+                              align="center"
+                            />
+                            <el-table-column
+                              prop="name"
+                              label="样本名称"
+                              align="center"
+                              width="100px"
+                              show-overflow-tooltip
+                            />
+                            <el-table-column
+                              prop="data_count"
+                              label="样本记录数"
+                              align="center"
+                              width="100px"
+                              show-overflow-tooltip
+                            />
+                            <el-table-column
+                              prop="description"
+                              label="描述"
+                              min-width="100px"
+                              show-overflow-tooltip
+                            />
+                          </el-table>
+                        </el-tab-pane>
+                      </el-tabs>
                     </div>
                   </div>
                 </div>
@@ -555,7 +557,7 @@ export default Vue.extend({
       isShowNode: false,
       isShowTab: false,
       currentNodeId: '',
-      currentNodeType: '',
+      currentNodeType: '数据源',
       isUndoDisable: true,
       isExecDisable: false,
       table: true,
@@ -563,6 +565,8 @@ export default Vue.extend({
 
       tableData2: [],
       dialogTableVisible: false,
+      cooperateList: ['自有数据', '合作方A', '合作方B'],
+      SourceActiveName: '自有数据',
       tabMapOptions: [
         { label: '本方数据输出', key: 'output' },
         { label: '日志', key: 'logger' },

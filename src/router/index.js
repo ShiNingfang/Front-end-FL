@@ -94,6 +94,20 @@ export const constantRoutes = [
         meta: { title: '首页', icon: 'dashboard', affix: true }
       }
     ]
+  },
+
+  {
+    path: '/login_test',
+    component: Layout,
+    redirect: '/login_test/a',
+    children: [
+      {
+        path: 'a',
+        component: () => import('@/views/a_login/flipLogin'),
+        name: 'Home',
+        meta: { title: '登录', icon: 'dashboard', affix: true }
+      }
+    ]
   }
 ]
 
@@ -146,15 +160,26 @@ export const asyncRoutes = [
         path: 'mine/:projectName',
         component: () => import('@/views/a_project/ProjectMineTask'),
         name: 'ProjectMineTask',
-        meta: { title: '默认项目名称', icon: 'edit' },
+        meta: { title: '默认项目', icon: 'edit' },
         beforeEnter: (to, from, next) => {
-          to.meta.title = to.params.projectName || '默认项目名称'
+          to.meta.title = to.params.projectName + '项目' || '默认项目'
+          next()
+        }
+      },
+      {
+        hidden: true,
+        path: 'mine/mine_task/:taskName',
+        component: () => import('@/views/a_project/TaskDragger/SplitDrag'),
+        name: 'ProjectMineTask',
+        meta: { title: '默认任务面板', icon: 'edit' },
+        beforeEnter: (to, from, next) => {
+          to.meta.title = to.params.taskName + '任务面板' || '默认任务面板'
           next()
         }
       },
       {
         path: 'other',
-        component: () => import('@/views/example/edit'),
+        component: () => import('@/views/a_project/ProjectOther'),
         name: 'ProjrctOther',
         meta: { title: '我方参与', icon: 'edit' }
       },

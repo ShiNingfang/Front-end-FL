@@ -28,6 +28,7 @@
       highlight-current-row
       style="width: 100%;"
       @sort-change="sortChange"
+      @row-click="gotoTaskBoard"
     >
       <el-table-column label="任务名称" prop="id" sortable="custom" align="center" min-width="80px" :class-name="getSortClass('id')">
         <template slot-scope="{row}">
@@ -44,11 +45,11 @@
           <span>{{ row.author }}</span>
         </template>
       </el-table-column>
-      <!-- <el-table-column label="合作方" width="110px" align="center">
-          <template slot-scope="{row}">
-            <span>{{ row.cooperator }}</span>
-          </template>
-        </el-table-column> -->
+      <el-table-column label="合作方" width="110px" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.cooperator }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="创建时间" class-name="status-col" min-width="100px">
         <template slot-scope="{row}">
           <el-tag :type="row.status | statusFilter">
@@ -107,7 +108,8 @@
 </template>
 
 <script>
-import { fetchList, fetchPv, createArticle, updateArticle } from '@/api/article'
+import { updateArticle } from '@/api/article'
+import { mineproject_task_fetchList, createTask } from '@/api/minedata'
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
@@ -166,7 +168,7 @@ export default {
         name: undefined,
         type: '',
         author: 'admin',
-        // cooperator: [], // 得从路径传过来啊
+        cooperator: [],
         startTime: new Date()
       },
       dialogFormVisible: false,
@@ -192,7 +194,7 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      fetchList(this.listQuery).then(response => {
+      mineproject_task_fetchList(this.listQuery).then(response => {
         this.list = response.data.items
         this.total = response.data.total
 
@@ -201,6 +203,11 @@ export default {
           this.listLoading = false
         }, 1.5 * 1000)
       })
+    },
+    gotoTaskBoard(row) {
+      if (row && row.name) {
+        this.$router.push({ path: `/projectManage/mine/mine_task/${row.name}` })
+      }
     },
     handleFilter() {
       this.listQuery.page = 1
@@ -248,7 +255,7 @@ export default {
     createTask() {
       this.$refs['taskForm'].validate((valid) => {
         if (valid) {
-          createArticle(this.temp_task).then(() => {
+          createTask(this.temp_task).then(() => {
             this.list.unshift(this.temp_task)
             this.dialogTaskFormVisible = false
             this.$notify({

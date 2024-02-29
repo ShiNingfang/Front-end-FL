@@ -172,7 +172,7 @@ export default function flowExec({ instance }) {
     const nodesData = model.getData().nodes
     const edges = model.getData().edges
 
-    const socket = io('http://localhost:3000')
+    const socket = io('http://localhost:5000')
     setSocket(socket)
     // console.log(store)
     await breadthFirstTraversal(rootNodeId, nodesData, edges, store, socket)

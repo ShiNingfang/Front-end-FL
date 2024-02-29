@@ -1,4 +1,5 @@
 import { CONNECTORSEPARATESYMBOL } from './const'
+import FlowChart from './index'
 import model from './model'
 import io from 'socket.io-client'
 
@@ -21,6 +22,7 @@ export default function flowExec({ instance }) {
   function changeStateByNodeId(nodeId, state) {
     const nodeEl = document.getElementById(nodeId)
     nodeEl.vNode.$children[0].state = state
+    model.setStatus(nodeId, state)
   }
 
   function getConnectorByUuids(uuids) {
@@ -62,20 +64,42 @@ export default function flowExec({ instance }) {
   }
 
   this.runModel = async(store) => {
-    function handleNode(socket, params) {
-      socket.emit('attack', { params: params })
+    function handleNode(socket, node) {
+      // 返回一个Promise
+      return new Promise((resolve, reject) => {
+        // 发送训练命令
+        socket.emit('train', { params: node.data.params })
+
+        // 监听一次 'train_result' 事件
+        socket.once('train_result', (data) => {
+          console.log('训练结束 : acc + ', data.acc + ', loss + ' + data.loss)
+          model.setResult(node.id, data)
+          resolve(data) // 解决Promise
+        })
+
+        // 监听错误
+        socket.once('error', (error) => {
+          console.error('WebSocket error during training:', error)
+          reject(error) // 拒绝Promise
+        })
+      })
     }
+
     function setSocket(socket) {
       // Socket.IO 自动处理连接，所以不需要特别监听open事件
 
       // 监听服务器发送的消息
 
       // 监听 'train_output' 事件
-      socket.on('attack_output', (data) => {
+      socket.on('train_output', (data) => {
         // data 是从服务器发送的包含消息的对象
-        console.log('Received train_output:', data.output)
+        console.log('训练输出 : ', data.output)
         store.dispatch('attack_logger/addLog', data.output)
-        console.log('attack_store:' + store.getters.attack_logs)
+      })
+
+      socket.on('train_result', (data) => {
+        // data 是从服务器发送的包含消息的对象
+        console.log('训练结束 : acc + ', data.acc + ', loss + ' + data.loss)
       })
 
       // Socket.IO 也自动处理连接关闭和错误
@@ -90,14 +114,27 @@ export default function flowExec({ instance }) {
         // 在这里，您可以处理连接过程中可能发生的任何错误
       })
     }
-    async function processNode(nodeId, node, store) {
+    async function processNode(nodeId, node, store, socket) {
       changeStateByNodeId(nodeId, 'loading')
-      // await new Promise(resolve => setTimeout(resolve, node.data.type === '数据源' ? 3000 : 4000)) // 为不同类型的节点设置不同的处理时间
-      await timeout(() => {
-        // console.log(node.data.params)
-      }, 1000)
+
+      const algorithmList = ['标准模式', '差分隐私', '负数据库', '优化GAN', '共享权重', '同态加密']
+      let isModel = false
+      if (node.data.type === '数据源') {
+        await timeout(() => {
+        }, 1000)
+      } else if (algorithmList.includes(node.data.type)) {
+        isModel = true
+        await handleNode(socket, node)
+      } else if (node.data.type === '模型对比') {
+        await timeout(() => {
+        }, 1000)
+      }
 
       changeStateByNodeId(nodeId, 'success')
+      if (isModel) {
+        FlowChart.emit('modelCompleted', node)
+        isModel = false
+      }
     }
 
     async function breadthFirstTraversal(rootId, nodes, edges, store, socket, visited = new Set()) {
@@ -111,16 +148,8 @@ export default function flowExec({ instance }) {
           continue
         }
 
-        const algorithmList = ['标准模式', '差分隐私', '负数据库', '优化GAN', '共享权重', '同态加密']
-        if (node.data.type === '数据源') {
-          // console.log("")
-        } else if (algorithmList.includes(node.data.type)) {
-          handleNode(socket, node.data.params)
-        } else if (node.data.type === '模型对比') {
-          // hh
-        }
+        await processNode(nodeId, node, store, socket) // 等待节点处理完成
 
-        await processNode(nodeId, node, store) // 等待节点处理完成
         visited.add(nodeId)
         result.push(node.id)
 
@@ -143,7 +172,7 @@ export default function flowExec({ instance }) {
     const nodesData = model.getData().nodes
     const edges = model.getData().edges
 
-    const socket = io('http://localhost:8080')
+    const socket = io('http://localhost:5000')
     setSocket(socket)
     // console.log(store)
     await breadthFirstTraversal(rootNodeId, nodesData, edges, store, socket)

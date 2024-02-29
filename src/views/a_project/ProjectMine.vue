@@ -40,12 +40,6 @@
           <span>{{ row.author }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="参与成员" min-width="100px" align="center">
-        <template slot-scope="{row}">
-          <span class="link-type" @click="handleUpdate(row)">{{ row.title }}</span>
-          <el-tag>{{ row.number }}</el-tag>
-        </template>
-      </el-table-column>
       <el-table-column label="合作方" min-width="100px" align="center">
         <template slot-scope="{row}">
           <span>{{ row.cooperator }}</span>
@@ -86,23 +80,11 @@
         <el-form-item label="项目名称" prop="name">
           <el-input v-model="temp.name" />
         </el-form-item>
-        <el-form-item label="参与成员">
-          <el-checkbox-group v-model="temp.number">
-            <el-checkbox v-for="(item, index) in number" :key="'number-' + index" :label="item">
-              {{ item }}
-            </el-checkbox>
-          </el-checkbox-group>
-        </el-form-item>
         <el-form-item label="合作方">
           <el-checkbox-group v-model="temp.cooperator">
             <el-checkbox v-for="(item, index) in cooperator" :key="'cooperator-' + index" :label="item">
               {{ item }}
             </el-checkbox>
-          </el-checkbox-group>
-        </el-form-item>
-        <el-form-item label="任务类型" prop="type">
-          <el-checkbox-group v-model="temp_task.type">
-            <el-checkbox label="横向建模" />
           </el-checkbox-group>
         </el-form-item>
         <el-form-item label="描述">
@@ -211,7 +193,6 @@ export default {
       temp: {
         name: undefined,
         author: 'admin',
-        number: [],
         cooperator: [],
         description: '',
         lastTime: new Date()

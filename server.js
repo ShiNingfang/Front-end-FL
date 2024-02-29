@@ -117,7 +117,7 @@ io.on('connection', (socket) => {
   })
 })
 
-const PORT = 3000 // 可以根据需要更改端口
+const PORT = 5000 // 可以根据需要更改端口
 server.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`)
 })

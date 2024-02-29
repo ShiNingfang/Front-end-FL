@@ -87,6 +87,30 @@ export function taskboard_getSimples(query) {
     params: query
   })
 }
+
+export function mineproject_task_fetchList(query) {
+  return request({
+    url: '/project_mine/task/getItems',
+    method: 'get',
+    params: query
+  })
+}
+
+export function createTask(data) {
+  return request({
+    url: '/project_mine/task/create',
+    method: 'post',
+    data
+  })
+}
+
+export function otjerproject_fetchList(query) {
+  return request({
+    url: '/project_other/getItems',
+    method: 'get',
+    params: query
+  })
+}
 // export function fetchArticle(id) {
 //   return request({
 //     url: '/vue-element-admin/article/detail',

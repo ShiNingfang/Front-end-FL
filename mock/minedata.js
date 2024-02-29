@@ -39,6 +39,18 @@ for (let i = 0; i < 100; i++) {
   }))
 }
 
+const List3 = [] // 确保list3数组被初始化
+
+for (let i = 0; i < 100; i++) {
+  List3.push(Mock.mock({
+    name: '@word', // 生成随机单词作为名称，假设原始数据中未定义则使用随机单词
+    type: '@pick(["type1", "type2", "type3"])', // 从数组中随机选择一个类型
+    author: 'admin', // 作者固定为'admin'
+    cooperator: [], // 空数组，具体需求未指定
+    startTime: '@date("yyyy-MM-dd")' // 生成随机日期作为开始时间
+  }))
+}
+
 module.exports = [
   {
     url: '/data_mine/getItems',
@@ -226,62 +238,52 @@ module.exports = [
         data: List
       }
     }
+  },
+  {
+    url: '/project_mine/task/getItems',
+    type: 'get',
+    response: config => {
+      const { importance, type, title, page = 1, limit = 20, sort } = config.query
+
+      const mockList = List3
+      const pageList = mockList.filter((item, index) => index < limit * page && index >= limit * (page - 1))
+
+      return {
+        code: 20000,
+        data: {
+          total: mockList.length,
+          items: pageList
+        }
+      }
+    }
+  },
+  {
+    url: '/project_mine/task/create',
+    type: 'post',
+    response: _ => {
+      return {
+        code: 20000,
+        data: 'success'
+      }
+    }
+  },
+  {
+    url: '/project_other/getItems',
+    type: 'get',
+    response: config => {
+      const { importance, type, title, page = 1, limit = 20, sort } = config.query
+
+      const mockList = List2
+      const pageList = mockList.filter((item, index) => index < limit * page && index >= limit * (page - 1))
+
+      return {
+        code: 20000,
+        data: {
+          total: mockList.length,
+          items: pageList
+        }
+      }
+    }
   }
-  //   {
-  //     url: '/data_author/getItems',
-  //     type: 'get',
-  //     response: config => {
-  //       const { importance, type, title, page = 1, limit = 20, sort } = config.query
-
-  //       let mockList = List.filter(item => {
-  //         // if (importance && item.importance !== +importance) return false
-  //         // if (type && item.type !== type) return false
-  //         // if (title && item.title.indexOf(title) < 0) return false
-  //         return true
-  //       })
-
-  //     //   if (sort === '-id') {
-  //     //     mockList = mockList.reverse()
-  //     //   }
-
-  //       const pageList = mockList.filter((item, index) => index < limit * page && index >= limit * (page - 1))
-
-  //       return {
-  //         code: 20000,
-  //         data: {
-  //           total: mockList.length,
-  //           items: pageList
-  //         }
-  //       }
-  //     }
-  //   }
-  //   {
-  //     url: '/data_author/getItems',
-  //     type: 'get',
-  //     response: config => {
-  //       const { importance, type, title, page = 1, limit = 20, sort } = config.query
-
-  //       let mockList = List.filter(item => {
-  //         // if (importance && item.importance !== +importance) return false
-  //         // if (type && item.type !== type) return false
-  //         // if (title && item.title.indexOf(title) < 0) return false
-  //         return true
-  //       })
-
-  //     //   if (sort === '-id') {
-  //     //     mockList = mockList.reverse()
-  //     //   }
-
-  //       const pageList = mockList.filter((item, index) => index < limit * page && index >= limit * (page - 1))
-
-//       return {
-//         code: 20000,
-//         data: {
-//           total: mockList.length,
-//           items: pageList
-//         }
-//       }
-//     }
-//   }
 ]
 

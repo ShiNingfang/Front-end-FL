@@ -101,6 +101,37 @@
                     id="mainContainer"
                   />
                 </div>
+                <!-- <el-dialog
+                  title="数据探查-（仅显示前100条）"
+                  :visible.sync="dialogTableVisible"
+                >
+                  <el-table :data="gridData">
+                    <el-table-column
+                      property="date"
+                      label="日期"
+                      width="150"
+                    />
+                    <el-table-column
+                      property="name"
+                      label="姓名"
+                      width="200"
+                    />
+                    <el-table-column
+                      property="address"
+                      label="地址"
+                    />
+                  </el-table>
+                  <div
+                    slot="footer"
+                    class="dialog-footer"
+                  >
+                    <el-button
+                      type="primary"
+                      @click="dialogTableVisible = false"
+                    >复 制</el-button>
+                    <el-button @click="dialogTableVisible = false">取 消</el-button>
+                  </div>
+                </el-dialog> -->
               </el-main>
             </el-container>
           </el-container>
@@ -119,51 +150,6 @@
                 <div class="title">参数配置-{{ currentNodeType }}</div>
                 <div class="model-attr">
                   <!-- 数据源 -->
-                  <div v-if="currentNodeType === '数据源' " style="height: 100%;">
-                    <!-- <div class="title">参数配置-选择数据源样本</div> -->
-                    <div class="model-attr" style="height: calc(100% - 41px);">
-                      <el-table
-                        ref="multipleTable"
-                        :data="tableData2"
-                        tooltip-effect="dark"
-                        style="width: 100%;"
-                        height="100%"
-                        show-overflow-tooltip
-                        highlight-current-row
-                        stripe
-                        @row-click="rowClick"
-                      >
-                        <el-table-column label="选择" width="55" align="center">
-                          <template slot-scope="scope">
-                            <el-radio
-                              v-model="tenderProjectId"
-                              :label="scope.row.name"
-                            >{{ '' }}</el-radio>
-                          </template>
-                        </el-table-column>
-                        <el-table-column
-                          prop="name"
-                          label="样本名称"
-                          align="center"
-                          width="100px"
-                          show-overflow-tooltip
-                        />
-                        <el-table-column
-                          prop="data_count"
-                          label="样本记录数"
-                          align="center"
-                          width="100px"
-                          show-overflow-tooltip
-                        />
-                        <el-table-column
-                          prop="description"
-                          label="描述"
-                          min-width="100px"
-                          show-overflow-tooltip
-                        />
-                      </el-table>
-                    </div>
-                  </div>
                   <el-form v-if="currentNodeType === '标准模式' || currentNodeType === '负数据库' || currentNodeType === '优化GAN' || currentNodeType === '共享权重'" :model="paramsForm" class="demo-form-inline" style="height:100%; padding-right:20px;" label-width="100px">
                     <el-col class="leftForm" :span="12">
                       <el-form-item label="no_models">
@@ -215,7 +201,7 @@
                       </el-form-item>
                     </el-col>
                   </el-form>
-                  <el-form v-if="currentNodeType === '差分隐私'" :model="paramsForm" class="demo-form-inline" style="height:100%; padding-right:20px;" label-width="100px">
+                  <el-form v-else-if="currentNodeType === '差分隐私'" :model="paramsForm" class="demo-form-inline" style="height:100%; padding-right:20px;" label-width="100px">
                     <el-col class="leftForm" :span="12">
                       <el-form-item label="no_models">
                         <el-input-number v-model="paramsForm.no_models" :min="1" :step="1" step-strictly size="mini" />
@@ -281,7 +267,7 @@
                       </el-form-item>
                     </el-col>
                   </el-form>
-                  <el-form v-if="currentNodeType === '同态加密'" :model="paramsForm" class="demo-form-inline" style="height:100%; padding-right:20px;" label-width="100px">
+                  <el-form v-else-if="currentNodeType === '同态加密'" :model="paramsForm" class="demo-form-inline" style="height:100%; padding-right:20px;" label-width="100px">
                     <el-col class="leftForm" :span="12">
                       <el-form-item label="no_models">
                         <el-input-number v-model="paramsForm.no_models" :min="1" :step="1" step-strictly size="mini" style="vertical-align: middle;" />
@@ -317,17 +303,148 @@
                       </el-form-item>
                     </el-col>
                   </el-form>
+                  <div v-else style="height: 100%;">
+                    <!-- <div class="title">参数配置-选择数据源样本</div> -->
+                    <div class="model-attr" style="height: calc(100% - 41px);">
+                      <el-table
+                        ref="multipleTable"
+                        :data="tableData2"
+                        tooltip-effect="dark"
+                        style="width: 100%;"
+                        height="100%"
+                        show-overflow-tooltip
+                        highlight-current-row
+                        stripe
+                        @row-click="rowClick"
+                        @selection-change="handleSelectionChange"
+                      >
+                        <el-table-column
+                          type="selection"
+                          width="55"
+                          align="center"
+                        />
+                        <el-table-column
+                          prop="name"
+                          label="样本名称"
+                          align="center"
+                          width="100px"
+                          show-overflow-tooltip
+                        />
+                        <el-table-column
+                          prop="data_count"
+                          label="样本记录数"
+                          align="center"
+                          width="100px"
+                          show-overflow-tooltip
+                        />
+                        <el-table-column
+                          prop="description"
+                          label="描述"
+                          min-width="100px"
+                          show-overflow-tooltip
+                        />
+                      </el-table>
+
+                    </div>
+                  </div>
                 </div>
               </el-main>
             </el-container>
           </el-aside>
+
           <!-- Tab -->
-          <el-tabs slot="paneR" v-model="activeName2" style="margin-top:0px; height:100%; overflow-y: auto;" type="border-card">
+          <el-tabs slot="paneR" v-model="TabActiveName" style="margin-top:0px; height:100%; overflow-y: auto;" type="border-card">
             <!-- <el-tab-pane v-for="item in tabMapOptions" :key="item.key" :label="item.label" :name="item.key"> -->
             <!-- </el-tab-pane> -->
+            <el-tab-pane label="日志" name="logger">
+              <div v-for="(log, index) in logMessages" :key="index" style="color:  #888; padding-left: 15px;">
+                {{ log }}
+              </div>
+            </el-tab-pane>
+            <el-tab-pane v-if="completedModelList.length > 0" id="modelResult" ref="modelResult" style="height: 100%;" label="模型对比报告" name="result">
+              <el-tabs v-model="ResultActiveName" style="margin-top:0px; height:100%; overflow-y: auto; " tab-position="left">
+                <el-tab-pane v-for="(modelNode, index) in completedModelList" :key="index" :label="modelNode.data.type" :name="modelNode.data.type">
+                  <!-- <div class="filter-container">
+                    <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">
+                      Export
+                    </el-button>
+                  </div> -->
+                  <el-table :data="allTableData[modelNode.data.type] ? allTableData[modelNode.data.type].tableData : []" border style="width: 100%;">
+                    <el-table-column prop="type" label="类型" width="100" />
+                    <el-table-column v-for="(iteration, resultIndex) in (allTableData[modelNode.data.type] ? allTableData[modelNode.data.type].iterations : [])" :key="resultIndex" :prop="iteration" :label="iteration" align="center" />
+                  </el-table>
 
-            <!-- 本方数据输出 -->
-            <el-tab-pane label="本方数据输出" name="output">
+                  <!-- 柱状图 -->
+                  <!-- <div id="BarChart" style="width: 100%;height:300px; margin-top: 30px;" /> -->
+                  <div :id="'RocChart-' + modelNode.data.type" style="width: 100%;height:400px;" />
+                </el-tab-pane>
+              </el-tabs>
+              <!-- <el-collapse v-model="contrast_activeNames" @change="handleChange">
+                <el-collapse-item title="模型信息" name="1">
+                  <el-descriptions title="用户信息">
+                    <el-descriptions-item label="用户名">kooriookami</el-descriptions-item>
+                    <el-descriptions-item label="手机号">18100000000</el-descriptions-item>
+                    <el-descriptions-item label="居住地">苏州市</el-descriptions-item>
+                    <el-descriptions-item label="备注">
+                      <el-tag size="small">学校</el-tag>
+                    </el-descriptions-item>
+                    <el-descriptions-item label="联系地址">江苏省苏州市吴中区吴中大道 1188 号</el-descriptions-item>
+                  </el-descriptions>
+                </el-collapse-item>
+                <el-collapse-item v-for="(modelNode, index) in completedModelList" id="contrastInfo" :ref="modelNode.data.type" :key="index" :title="modelNode.data.type" :name="modelNode.data.type">
+                  <div class="filter-container">
+                    <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">
+                      Export
+                    </el-button>
+                  </div>
+                  <el-table
+                    :key="tableKey"
+                    v-loading="listLoading"
+                    :data="list"
+                    border
+                    fit
+                    highlight-current-row
+                    style="width: 100%;"
+                  >
+                    <el-table-column label="样本名称" prop="id" align="center" width="80">
+                      <template slot-scope="{row}">
+                        <span>{{ row.name }}</span>
+                      </template>
+                    </el-table-column>
+                    <el-table-column label="样本集" width="100px" align="center">
+                      <template slot-scope="{row}">
+                        <span>{{ row.set }}</span>
+                      </template>
+                    </el-table-column>
+                    <el-table-column label="原始文件名称" width="110px" align="center">
+                      <template slot-scope="{row}">
+                        <span>{{ row.origin_name }}</span>
+                      </template>
+                    </el-table-column>
+                    <el-table-column label="样本计数" width="100px" align="center">
+                      <template slot-scope="{row}">
+                        <span>{{ row.data_count }}</span>
+                      </template>
+                    </el-table-column>
+                    <el-table-column label="加入项目数" align="center" width="95">
+                      <template slot-scope="{row}">
+                        <span>{{ row.join_count }}</span>
+                      </template>
+                    </el-table-column>
+                    <el-table-column label="修改时间" class-name="status-col" align="center" width="140">
+                      <template slot-scope="{row}">
+                        <el-tag :type="row.status">
+                          {{ row.update_time | parseTime('{y}-{m}-{d} {h}:{i}') }}
+                        </el-tag>
+                      </template>
+                    </el-table-column>
+                  </el-table>
+
+                  <div id="BarChart" style="width: 100%;height:300px; margin-top: 30px;" />
+                </el-collapse-item>
+              </el-collapse> -->
+            </el-tab-pane>
+            <!-- <el-tab-pane label="本方数据输出" name="output">
               <el-collapse v-model="output_activeNames" @change="handleChange">
                 <el-collapse-item title="统计信息" name="1">
                   <el-descriptions title="用户信息">
@@ -393,86 +510,12 @@
 
                 </el-collapse-item>
               </el-collapse>
-            </el-tab-pane>
-            <!-- 评估报告 -->
-            <el-tab-pane label="评估报告" name="evaluate">
+            </el-tab-pane> -->
+            <!-- <el-tab-pane label="评估报告" name="evaluate">
               <div id="evaluateInfo" style="width: 100%;">
                 <div id="RocChart" style="width: 100%;height:400px;" />
               </div>
-            </el-tab-pane>
-            <!-- 模型对比报告 -->
-            <el-tab-pane label="模型对比报告" name="contrast">
-              <el-collapse v-model="contrast_activeNames" @change="handleChange">
-                <el-collapse-item title="模型信息" name="1">
-                  <el-descriptions title="用户信息">
-                    <el-descriptions-item label="用户名">kooriookami</el-descriptions-item>
-                    <el-descriptions-item label="手机号">18100000000</el-descriptions-item>
-                    <el-descriptions-item label="居住地">苏州市</el-descriptions-item>
-                    <el-descriptions-item label="备注">
-                      <el-tag size="small">学校</el-tag>
-                    </el-descriptions-item>
-                    <el-descriptions-item label="联系地址">江苏省苏州市吴中区吴中大道 1188 号</el-descriptions-item>
-                  </el-descriptions>
-                </el-collapse-item>
-                <el-collapse-item id="contrastInfo" title="图表" name="2">
-                  <div class="filter-container">
-                    <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">
-                      Export
-                    </el-button>
-                  </div>
-                  <el-table
-                    :key="tableKey"
-                    v-loading="listLoading"
-                    :data="list"
-                    border
-                    fit
-                    highlight-current-row
-                    style="width: 100%;"
-                  >
-                    <el-table-column label="样本名称" prop="id" align="center" width="80">
-                      <template slot-scope="{row}">
-                        <span>{{ row.name }}</span>
-                      </template>
-                    </el-table-column>
-                    <el-table-column label="样本集" width="100px" align="center">
-                      <template slot-scope="{row}">
-                        <span>{{ row.set }}</span>
-                      </template>
-                    </el-table-column>
-                    <el-table-column label="原始文件名称" width="110px" align="center">
-                      <template slot-scope="{row}">
-                        <span>{{ row.origin_name }}</span>
-                      </template>
-                    </el-table-column>
-                    <el-table-column label="样本计数" width="100px" align="center">
-                      <template slot-scope="{row}">
-                        <span>{{ row.data_count }}</span>
-                      </template>
-                    </el-table-column>
-                    <el-table-column label="加入项目数" align="center" width="95">
-                      <template slot-scope="{row}">
-                        <span>{{ row.join_count }}</span>
-                      </template>
-                    </el-table-column>
-                    <el-table-column label="修改时间" class-name="status-col" align="center" width="140">
-                      <template slot-scope="{row}">
-                        <el-tag :type="row.status">
-                          {{ row.update_time | parseTime('{y}-{m}-{d} {h}:{i}') }}
-                        </el-tag>
-                      </template>
-                    </el-table-column>
-                  </el-table>
-
-                  <div id="BarChart" style="width: 100%;height:300px; margin-top: 30px;" />
-                </el-collapse-item>
-              </el-collapse>
-            </el-tab-pane>
-            <!-- 日志 -->
-            <el-tab-pane label="日志" name="logger">
-              <div v-for="(log, index) in logMessages" :key="index" style="color:  #888;">
-                {{ log }}
-              </div>
-            </el-tab-pane>
+            </el-tab-pane> -->
           </el-tabs>
         </split-pane>
       </split-pane>
@@ -509,7 +552,7 @@ export default Vue.extend({
     return {
       // showInnerSplitPane: false, // 控制内部 split-pane 显示的状态
       isShowNode: false,
-      isShowTab: true,
+      isShowTab: false,
       currentNodeId: '',
       currentNodeType: '',
       isUndoDisable: true,
@@ -525,13 +568,16 @@ export default Vue.extend({
         { label: '当前评估报告', key: 'evaluate' },
         { label: '模型对比报告', key: 'contrast' }
       ],
-      activeName2: 'CN',
+      TabActiveName: 'logger',
+      ResultActiveName: '',
       createdTimes: 0,
       paramsForm: {},
       node: {},
+      completedModelList: [],
+      allTableData: {}, // 用于存储所有模型类型的表格数据
 
-      output_activeNames: ['1', '2'],
-      contrast_activeNames: ['1', '2'],
+      output_activeNames: [],
+      contrast_activeNames: [],
       tableKey: 0,
       list: null,
       total: 0,
@@ -564,24 +610,19 @@ export default Vue.extend({
     }
   },
   watch: {
-    activeName2(val) {
-      this.$router.push(`${this.$route.path}?tab=${val}`)
-    },
-    isShowNode(newVal) {
+    // TabActiveName(val) {
+    //   this.$router.push(`${this.$route.path}?tab=${val}`)
+    // },
+    isShowTab(newVal) {
       if (newVal === true) {
-        // console.log(newVal)
         this.$nextTick(() => {
-          // 在DOM更新完成后，初始化图表
           this.initCharts()
         })
       }
     },
     currentNodeId(val) {
-      // console.log('id:' + val)
       this.paramsForm = FlowChart.getNodeParams(val)
       this.node = FlowChart.getNode(val)
-      // console.log(this.paramsForm)
-      // console.log()
     }
   },
   created() {
@@ -611,11 +652,46 @@ export default Vue.extend({
       this.currentNodeId = id
       this.currentNodeType = type
     })
+    FlowChart.on('modelCompleted', (node) => {
+      const nodeType = node.data.type
+      this.completedModelList.push(node)
+      if (this.completedModelList.length === 1) {
+        this.TabActiveName = 'result'
+        this.ResultActiveName = nodeType
+      }
+      console.log(node.data.result)
+      // 转换结果为表格数据并根据模型类型存储
+      this.transformResultsToTableData(nodeType, node.data.result)
+
+      // 渲染结果
+      this.$nextTick(() => {
+        // 渲染图表
+        this.initRocChart('RocChart-' + nodeType, node.data.result)
+
+        // 添加大小变化的监听器
+        const chartContainer = document.getElementById('RocChart-' + nodeType)
+        if (chartContainer) {
+          const resizeObserver = new ResizeObserver(entries => {
+            for (const entry of entries) {
+              const echartsInstance = echarts.getInstanceByDom(entry.target)
+              if (echartsInstance) {
+                echartsInstance.resize()
+              }
+            }
+          })
+          resizeObserver.observe(chartContainer)
+
+          // 如果需要，可以在组件销毁时停止观察
+          this.$once('hook:beforeDestroy', () => {
+            resizeObserver.unobserve(chartContainer)
+          })
+        }
+      })
+    })
+
     getFlowChartData().then((data) => {
       FlowChart.loadData(data.data)
     })
-
-    this.checkAndInitCharts()
   },
   methods: {
     dragoverHandle(ev) {
@@ -624,18 +700,18 @@ export default Vue.extend({
     dropHandle(ev) {
       FlowChart.addNode({ pageX: ev.pageX, pageY: ev.pageY }, ev.dataTransfer.getData('target'))
     },
-    // clickBgHandle() {
-    //   this.isShowNode = false
-    // },
     execModel() {
       this.isExecDisable = true
+      this.isShowNode = true
+      this.isShowTab = true
       FlowChart.runModel(this.$store).then(() => {
         this.isExecDisable = false
       })
     },
     saveData() {
       const modelData = FlowChart.getModelData()
-      console.log(modelData)
+      // console.log(modelData)
+      // console.log(FlowChart.getCompletedModel())
       // console.log(modelData)
       this.$message.success('模型保存成功')
     },
@@ -767,18 +843,15 @@ export default Vue.extend({
         series: [{ type: 'bar' }, { type: 'bar' }]
       })
     },
-    initRocChart() {
-      const chartDom = document.getElementById('RocChart')
+    initRocChart(id, data) {
+      const chartDom = document.getElementById(id)
       this.RocChart = echarts.init(chartDom)
       this.RocChart.setOption({
-        title: {
-          // text: 'ROC Curve'
-        },
         tooltip: {
           trigger: 'axis'
         },
         legend: {
-          data: ['TPR', 'FPR']
+          data: ['Acc', 'Loss']
         },
         grid: {
           left: '3%',
@@ -786,77 +859,65 @@ export default Vue.extend({
           bottom: '3%',
           containLabel: true
         },
-        xAxis: {
-          type: 'value',
-          name: 'FPR',
-          min: 0,
-          max: 1,
-          interval: 0.1,
-          splitLine: {
-            show: true, // 显示x轴分割线
-            lineStyle: {
-              color: '#EDEFF3' // 分割线颜色，这里设置为红色
-            }
+        toolbox: {
+          feature: {
+            saveAsImage: {}
           }
         },
+        xAxis: {
+          type: 'category',
+          boundaryGap: false,
+          data: data.acc.map((_, i) => `Epoch ${i + 1}`) // 假设每个epoch对应一个数据点
+        },
         yAxis: {
-          type: 'value',
-          name: 'TPR',
-          min: 0,
-          max: 1,
-          interval: 0.1,
-          splitLine: {
-            show: true, // 显示x轴分割线
-            lineStyle: {
-              color: '#EDEFF3' // 分割线颜色，这里设置为红色
-            }
-          }
+          type: 'value'
         },
         series: [
           {
-            name: 'TPR',
+            name: 'Acc',
             type: 'line',
-            smooth: true,
-            data: [[0, 0], [0.1, 0.3], [0.2, 0.5], [0.3, 0.7], [0.4, 0.8], [1, 1]]
+            data: data.acc
           },
           {
-            name: 'FPR',
+            name: 'Loss',
             type: 'line',
-            smooth: true,
-            data: [[0, 0], [0.1, 0.2], [0.2, 0.4], [0.3, 0.6], [0.4, 0.7], [1, 1]]
+            data: data.loss
           }
         ]
       })
     },
-    observeContrastInfoResize() {
-      const resizeObserver = new ResizeObserver(entries => {
-        for (const entry of entries) {
-          // 当contrastInfo大小变化时，调整ECharts实例的大小
-          if (this.BarChart) {
-            this.BarChart.resize()
-          }
-          if (this.RocChart) {
-            this.RocChart.resize()
-          }
-        }
-      })
-      if (this.contrastInfo) resizeObserver.observe(this.contrastInfo) // 开始观察
-      if (this.evaluateInfo) resizeObserver.observe(this.evaluateInfo)
-    },
-    initCharts() {
-      this.contrastInfo = document.getElementById('contrastInfo')
-      if (this.contrastInfo) {
-        this.initBarChart()
-      }
-      this.evaluateInfo = document.getElementById('evaluateInfo')
-      if (this.evaluateInfo) {
-        this.initRocChart()
-      }
-      this.observeContrastInfoResize() // 设置ResizeObserver监听
+    // 转换特定模型类型的结果数据为表格数据
+    transformResultsToTableData(modelType, result) {
+      const { acc, loss } = result
+      const iterations = acc.map((_, index) => `训练${index + 1}`)
+      const accRow = { type: 'Acc', ...acc.reduce((obj, value, index) => ({ ...obj, [`训练${index + 1}`]: value }), {}) }
+      const lossRow = { type: 'Loss', ...loss.reduce((obj, value, index) => ({ ...obj, [`训练${index + 1}`]: value }), {}) }
+      const tableData = [accRow, lossRow]
+
+      // 将转换后的表格数据存储在allTableData对象中，按模型类型组织
+      this.$set(this.allTableData, modelType, { tableData, iterations })
     }
   }
 })
 </script>
+
+<style scoped>
+  .components-container {
+    position: relative;
+    /* height: 100vh; */
+    height: calc(100vh - 85px);
+    margin: 0;
+  }
+  .tab-container {
+    margin: 0px;
+  }
+  .leftForm{
+    padding-left: 20px;
+  }
+  ::v-deep .el-tabs__content{
+    padding-left: 0px;
+  }
+</style>
 
 <style lang="scss">
 .flowChartWrap {
@@ -1061,19 +1122,4 @@ export default Vue.extend({
 .el-main{
     padding: 0,
 }
-</style>
-
-<style scoped>
-  .components-container {
-    position: relative;
-    /* height: 100vh; */
-    height: calc(100vh - 85px);
-    margin: 0;
-  }
-  .tab-container {
-    margin: 0px;
-  }
-  .leftForm{
-    padding-left: 20px;
-  }
 </style>
