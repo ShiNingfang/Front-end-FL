@@ -70,7 +70,7 @@ export default function flowExec({ instance }) {
       return new Promise((resolve, reject) => {
         // 发送攻击命令
         socket.emit('attack', { params: params })
-        // console.log('params', params)
+        console.log('params', params)
 
         // 监听一次 'attack_result' 事件
         socket.once('attack_result', (data) => {
@@ -129,7 +129,7 @@ export default function flowExec({ instance }) {
         context.encryptId = nodeId
       } else if (AttackList.includes(node.data.type)) {
         isAttack = true
-        params.type = node.data.params.type
+        params.attack_type = node.data.params.attack_type
         // console.log('handle1')
         await handleNode(socket, node, params)
         // console.log('handle2')

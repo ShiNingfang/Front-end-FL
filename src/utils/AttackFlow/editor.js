@@ -358,15 +358,15 @@ function addNodeByDrag(position, elId) {
     }
   } else if (type === '梯度泄露') {
     params = {
-      type: 0
+      attack_type: 0
     }
   } else if (type === '成员推理') {
     params = {
-      type: 1
+      attack_type: 1
     }
   } else if (type === '模型逆向') {
     params = {
-      type: 2
+      attack_type: 2
     }
   }
 
