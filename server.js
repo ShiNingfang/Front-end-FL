@@ -77,8 +77,35 @@ io.on('connection', (socket) => {
     }, 1000)
     // 模拟攻击过程和结果
     setTimeout(() => {
-      console.log('attack result send')
-      socket.emit('attack_result', '攻击结束')
+      const result = {
+        pic: [
+          'C:\\Users\\33053\\Downloads\\result1.png',
+          'C:\\Users\\33053\\Downloads\\result2.png',
+          'C:\\Users\\33053\\Downloads\\result3.png',
+          'C:\\Users\\33053\\Downloads\\result4.png',
+          'C:\\Users\\33053\\Downloads\\result5.png',
+          'C:\\Users\\33053\\Downloads\\result6.png',
+          'C:\\Users\\33053\\Downloads\\result7.png',
+          'C:\\Users\\33053\\Downloads\\result8.png',
+          'C:\\Users\\33053\\Downloads\\result9.png',
+          'C:\\Users\\33053\\Downloads\\result10.png'
+        ],
+        metrics: {
+          0: {
+            'precision': 0.62,
+            'recall': 0.74,
+            'f1-score': 0.68,
+            'support': 10000
+          },
+          1: {
+            'precision': 0.68,
+            'recall': 0.55,
+            'f1-score': 0.61,
+            'support': 10000
+          }
+        }
+      }
+      socket.emit('attack_result', result)
     }, 3000) // 假设训练需要3秒钟
   })
 

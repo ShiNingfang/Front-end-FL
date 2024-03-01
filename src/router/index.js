@@ -62,7 +62,7 @@ export const constantRoutes = [
   },
   {
     path: '/login',
-    component: () => import('@/views/login/index'),
+    component: () => import('@/views/a_login/Login'),
     hidden: true
   },
   {
@@ -92,20 +92,6 @@ export const constantRoutes = [
         component: () => import('@/views/dashboard/index'),
         name: 'Home',
         meta: { title: '首页', icon: 'dashboard', affix: true }
-      }
-    ]
-  },
-
-  {
-    path: '/login_test',
-    component: Layout,
-    redirect: '/login_test/a',
-    children: [
-      {
-        path: 'a',
-        component: () => import('@/views/a_login/flipLogin'),
-        name: 'Home',
-        meta: { title: '登录', icon: 'dashboard', affix: true }
       }
     ]
   }

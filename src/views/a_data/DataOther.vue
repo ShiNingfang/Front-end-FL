@@ -161,16 +161,6 @@ export default {
         description: '',
         is_apply: false
       },
-      // temp: {
-      //   name: undefined,
-      //   set: 1,
-      //   source: '',
-      //   oldName: '',
-      //   count: '',
-      //   description: '',
-      //   inclusionCount: '',
-      //   lastTime: new Date()
-      // },
       dialogFormVisible: false,
       dialogStatus: '',
       textMap: {
@@ -245,7 +235,7 @@ export default {
         })
       })
     },
-    handleRequest(row) {
+    handleRequest(row, index) {
       this.$confirm('此操作将申请授权且无法撤销，是否提交申请?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -253,10 +243,11 @@ export default {
       }).then(() => {
         applyAuthority(row.idcode).then(() => {
           row.is_apply = true
+          this.list.splice(index, 1, row)
           this.dialogFormVisible = false
           this.$notify({
             title: '成功',
-            message: '创建成功',
+            message: '申请成功',
             type: 'success',
             duration: 2000
           })

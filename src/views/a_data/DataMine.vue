@@ -39,12 +39,6 @@
           <span>{{ row.set }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="数据源" width="100px">
-        <template slot-scope="{row}">
-          <span class="link-type" @click="handleUpdate(row)">{{ row.title }}</span>
-          <el-tag>{{ row.source }}</el-tag>
-        </template>
-      </el-table-column>
       <el-table-column label="原始文件名称" width="110px" align="center">
         <template slot-scope="{row}">
           <span>{{ row.origin_name }}</span>
@@ -86,9 +80,6 @@
           </el-button>
           <el-button size="mini" type="danger" @click="handleDelete(row,$index)">
             删除
-          </el-button>
-          <el-button size="mini" type="success" @click="handleAttack(row)">
-            攻击模拟
           </el-button>
         </template>
       </el-table-column>

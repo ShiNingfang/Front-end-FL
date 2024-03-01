@@ -273,17 +273,15 @@ export default {
       }).then(() => {
         handleApply({ is_agree: false, row }).then(() => {
           row.is_agree = 'no'
-          const index = this.list.findIndex(v => v.idcode === this.temp.idcode)
           this.list.splice(index, 1, row)
           this.dialogFormVisible = false
           this.$notify({
-            title: 'Success',
-            message: 'Update Successfully',
+            title: '成功',
+            message: '拒绝成功',
             type: 'success',
             duration: 2000
           })
         })
-        // 与后端同步
         this.$message({
           type: 'success',
           message: '已拒绝授权!'

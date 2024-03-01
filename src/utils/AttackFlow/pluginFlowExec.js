@@ -74,8 +74,6 @@ export default function flowExec({ instance }) {
 
         // 监听一次 'attack_result' 事件
         socket.once('attack_result', (data) => {
-          // console.log('attack_result:' + data)
-          // 输出一下data
           model.setResult(node.id, data)
           resolve(data) // 解决Promise
         })

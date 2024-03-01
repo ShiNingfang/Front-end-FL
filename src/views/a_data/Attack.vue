@@ -1,82 +1,14 @@
 <template>
   <div class="components-container">
     <split-pane class="flowChartWrap" :min-percent="5" :default-percent="17" split="vertical">
-      <!-- <div slot="paneL" class="left-container" /> -->
       <AttackTree slot="paneL" style="width: auto;" />
       <split-pane slot="paneR" class="flowChartWrap" :default-percent="node_outerSplitPaneSize" split="vertical">
+
+        <!-- 画布 -->
         <el-main slot="paneL">
           <el-container>
-            <!-- 2.2 画布内容 -->
             <el-container>
-              <!-- 2.2.1 flow面板 -->
               <el-main class="main">
-                <!-- 2.2.1.1操作按钮 -->
-                <!-- <div id="mainMenu">
-                  <div class="tool-left">
-                    <el-button
-                      icon="el-icon-video-play"
-                      :disabled="isExecDisable"
-                      size="small"
-                      @click="execModel"
-                    >执行</el-button>
-                    <el-button
-                      icon="el-icon-video-play"
-                      size="small"
-                      @click="saveData"
-                    >保存</el-button>
-                    <el-button
-                      icon="el-icon-upload"
-                      size="small"
-                    >部署</el-button>
-                    <el-button
-                      icon="el-icon-box"
-                      size="small"
-                    >Auto ML</el-button>
-                  </div>
-                  <div class="tool-right">
-                    <el-tooltip content="撤销">
-                      <el-button
-                        icon="el-icon-refresh-left"
-                        :disabled="isUndoDisable"
-                        circle
-                        @click="undo"
-                      />
-                    </el-tooltip>
-                    <el-tooltip content="放大">
-                      <el-button
-                        icon="el-icon-zoom-in"
-                        circle
-                        @click="zoomOut"
-                      />
-                    </el-tooltip>
-                    <el-tooltip content="缩小">
-                      <el-button
-                        icon="el-icon-zoom-out"
-                        circle
-                        @click="zoomIn"
-                      />
-                    </el-tooltip>
-                    <el-tooltip content="自动布局">
-                      <el-button
-                        icon="el-icon-bangzhu"
-                        circle
-                      />
-                    </el-tooltip>
-                    <el-tooltip content="适应画布">
-                      <el-button
-                        icon="el-icon-money"
-                        circle
-                      />
-                    </el-tooltip>
-                    <el-tooltip content="全屏">
-                      <el-button
-                        icon="el-icon-full-screen"
-                        circle
-                      />
-                    </el-tooltip>
-                  </div>
-                </div> -->
-                <!-- 2.2.1.2 画布容器 -->
                 <div
                   class="mainContainer"
                   @drop="dropHandle"
@@ -101,37 +33,6 @@
                     id="mainContainer"
                   />
                 </div>
-                <!-- <el-dialog
-                  title="数据探查-（仅显示前100条）"
-                  :visible.sync="dialogTableVisible"
-                >
-                  <el-table :data="gridData">
-                    <el-table-column
-                      property="date"
-                      label="日期"
-                      width="150"
-                    />
-                    <el-table-column
-                      property="name"
-                      label="姓名"
-                      width="200"
-                    />
-                    <el-table-column
-                      property="address"
-                      label="地址"
-                    />
-                  </el-table>
-                  <div
-                    slot="footer"
-                    class="dialog-footer"
-                  >
-                    <el-button
-                      type="primary"
-                      @click="dialogTableVisible = false"
-                    >复 制</el-button>
-                    <el-button @click="dialogTableVisible = false">取 消</el-button>
-                  </div>
-                </el-dialog> -->
               </el-main>
             </el-container>
           </el-container>
@@ -147,22 +48,20 @@
             <el-container id="mainNodeInfo" style="height: 100%;">
               <el-main>
                 <!-- 参数配置 -->
-                <div class="title">参数配置-{{ currentNodeType }}</div>
+                <div class="title">参数配置-选择数据源</div>
                 <div class="model-attr">
                   <!-- 数据源 -->
                   <div style="height: 100%;">
-                    <!-- <div class="title">参数配置-选择数据源样本</div> -->
                     <div class="model-attr" style="height: calc(100% - 41px);">
                       <el-table
                         ref="multipleTable"
-                        :data="tableData2"
+                        :data="sourceTable"
                         tooltip-effect="dark"
                         style="width: 100%;"
                         height="100%"
                         show-overflow-tooltip
                         highlight-current-row
                         stripe
-                        @row-click="rowClick"
                         @selection-change="handleSelectionChange"
                       >
                         <el-table-column
@@ -201,88 +100,21 @@
 
           <!-- Tab -->
           <el-tabs slot="paneR" v-model="TabActiveName" style="margin-top:0px; height:100%; overflow-y: auto;" type="border-card">
-            <!-- <el-tab-pane v-for="item in tabMapOptions" :key="item.key" :label="item.label" :name="item.key"> -->
-            <!-- </el-tab-pane> -->
             <el-tab-pane label="日志" name="logger">
-              <div v-for="(log, index) in logMessages" :key="index" style="color:  #888; padding-left: 15px;">
+              <div v-for="(log, index) in logMessages" :key="index" style="color:  #888;">
                 {{ log }}
               </div>
             </el-tab-pane>
-            <el-tab-pane id="modelResult" ref="modelResult" style="height: 100%;" label="攻击模拟结果展示" name="result">
-              <!-- <div id="RocChart" style="width: 100%;height:400px;" /> -->
-            </el-tab-pane>
-            <!-- <el-tab-pane label="本方数据输出" name="output">
-              <el-collapse v-model="output_activeNames" @change="handleChange">
-                <el-collapse-item title="统计信息" name="1">
-                  <el-descriptions title="用户信息">
-                    <el-descriptions-item label="用户名">kooriookami</el-descriptions-item>
-                    <el-descriptions-item label="手机号">18100000000</el-descriptions-item>
-                    <el-descriptions-item label="居住地">苏州市</el-descriptions-item>
-                    <el-descriptions-item label="备注">
-                      <el-tag size="small">学校</el-tag>
-                    </el-descriptions-item>
-                    <el-descriptions-item label="联系地址">江苏省苏州市吴中区吴中大道 1188 号</el-descriptions-item>
-                  </el-descriptions>
+            <el-tab-pane v-if="hasResult" id="modelResult" ref="modelResult" style="height: 100%;" label="攻击模拟结果展示" name="result">
+              <el-collapse v-model="output_attack">
+                <el-collapse-item v-if="hasmetrics" title="雷达图" name="radar">
+                  <div id="RadarChart" style="width: 100%;height:400px;" />
                 </el-collapse-item>
-                <el-collapse-item title="元数据信息" name="2">
-                  <div class="filter-container">
-                    <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">
-                      Export
-                    </el-button>
-                  </div>
-                  <el-table
-                    :key="tableKey"
-                    v-loading="listLoading"
-                    :data="list"
-                    border
-                    fit
-                    highlight-current-row
-                    style="width: 100%;"
-                  >
-                    <el-table-column label="样本名称" prop="id" align="center" width="80">
-                      <template slot-scope="{row}">
-                        <span>{{ row.name }}</span>
-                      </template>
-                    </el-table-column>
-                    <el-table-column label="样本集" width="100px" align="center">
-                      <template slot-scope="{row}">
-                        <span>{{ row.set }}</span>
-                      </template>
-                    </el-table-column>
-                    <el-table-column label="原始文件名称" width="110px" align="center">
-                      <template slot-scope="{row}">
-                        <span>{{ row.origin_name }}</span>
-                      </template>
-                    </el-table-column>
-                    <el-table-column label="样本计数" width="100px" align="center">
-                      <template slot-scope="{row}">
-                        <span>{{ row.data_count }}</span>
-                      </template>
-                    </el-table-column>
-                    <el-table-column label="加入项目数" align="center" width="95">
-                      <template slot-scope="{row}">
-                        <span>{{ row.join_count }}</span>
-                      </template>
-                    </el-table-column>
-                    <el-table-column label="修改时间" class-name="status-col" align="center" width="140">
-                      <template slot-scope="{row}">
-                        <el-tag :type="row.status">
-                          {{ row.update_time | parseTime('{y}-{m}-{d} {h}:{i}') }}
-                        </el-tag>
-                      </template>
-                    </el-table-column>
-                  </el-table>
-
-                  <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
-
+                <el-collapse-item v-if="haspic" title="攻击结果图" name="picture">
+                  <el-image v-for="url in picList" :key="url" :src="url" :preview-src-list="picList" lazy />
                 </el-collapse-item>
               </el-collapse>
-            </el-tab-pane> -->
-            <!-- <el-tab-pane label="评估报告" name="evaluate">
-              <div id="evaluateInfo" style="width: 100%;">
-                <div id="RocChart" style="width: 100%;height:400px;" />
-              </div>
-            </el-tab-pane> -->
+            </el-tab-pane>
           </el-tabs>
         </split-pane>
       </split-pane>
@@ -302,50 +134,32 @@ import PluginFlowExec from '../../utils/AttackFlow/pluginFlowExec'
 
 import { fetchList } from '@/api/minedata'
 import waves from '@/directive/waves' // waves directive
-import { parseTime } from '@/utils'
-import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
 import * as echarts from 'echarts'
 
 FlowChart.use(PluginFlowExec)
 
 export default Vue.extend({
-  components: { AttackTree, splitPane, Pagination },
+  components: { AttackTree, splitPane },
   directives: { waves },
   props: {
     sidebarComponentName: String
   },
   data() {
     return {
-      // showInnerSplitPane: false, // 控制内部 split-pane 显示的状态
       isShowNode: false,
       isShowTab: false,
       currentNodeId: '',
-      currentNodeType: '',
-      isUndoDisable: true,
       isExecDisable: false,
-      table: true,
-      tenderProjectId: '',
+      output_attack: [],
+      hasResult: false,
+      hasmetrics: false,
+      haspic: false,
+      picList: [],
 
-      tableData2: [],
-      dialogTableVisible: false,
-      tabMapOptions: [
-        { label: '本方数据输出', key: 'output' },
-        { label: '日志', key: 'logger' },
-        { label: '当前评估报告', key: 'evaluate' },
-        { label: '模型对比报告', key: 'contrast' }
-      ],
+      sourceTable: [],
       TabActiveName: 'logger',
-      ResultActiveName: '',
-      createdTimes: 0,
-      paramsForm: {},
       node: {},
-      completedModelList: [],
-      allTableData: {}, // 用于存储所有模型类型的表格数据
-
-      output_activeNames: [],
-      contrast_activeNames: [],
-      tableKey: 0,
       list: null,
       total: 0,
       listLoading: true,
@@ -356,12 +170,7 @@ export default Vue.extend({
         title: undefined,
         type: undefined,
         sort: '-lastTime'
-      },
-      downloadLoading: false,
-      contrastInfo: null,
-      BarChart: null, // 用于存储ECharts实例
-      evaluateInfo: null,
-      RocChart: null
+      }
     }
   },
   computed: {
@@ -372,74 +181,67 @@ export default Vue.extend({
       return this.isShowTab ? 60 : 100 // 60 100
     },
     logMessages() {
-      // console.log('logMessages : ' + this.$store.getters.attack_logs)
       return this.$store.getters.attack_logs
     }
   },
   watch: {
-    // TabActiveName(val) {
-    //   this.$router.push(`${this.$route.path}?tab=${val}`)
-    // },
     currentNodeId(val) {
-      this.paramsForm = FlowChart.getNodeParams(val)
       this.node = FlowChart.getNode(val)
     }
   },
   created() {
-    // init the default selected tab
     this.getSimple()
-
-    const tab = this.$route.query.tab
-    if (tab) {
-      this.activeName2 = tab
-    }
     this.getList()
   },
   mounted() {
     FlowChart.setContainer('mainContainer')
-    FlowChart.on('commandListEmpty', () => {
-      this.isUndoDisable = true
-    })
-    FlowChart.on('showNodeData', () => {
-      this.dialogTableVisible = true
-    })
-    FlowChart.on('addCommand', () => {
-      this.isUndoDisable = false
-    })
     FlowChart.on('selectNode', (id, type) => {
       this.isShowNode = true
-      // console.log('isshownode' + this.isShowNode)
       this.currentNodeId = id
-      this.currentNodeType = type
     })
     FlowChart.on('modelCompleted', (node) => {
-      const nodeType = node.data.type
       this.TabActiveName = 'result'
-      console.log(node.data.result)
+      this.hasResult = true
+      const result = node.data.result
+      console.log(result)
       // 渲染雷达图
-      this.$nextTick(() => {
+      if (result.metrics) {
+        this.output_attack.push('radar')
+        this.hasmetrics = true
+        this.$nextTick(() => {
         // 渲染图表
-        this.initRocChart('RocChart-' + nodeType, node.data.result)
+          this.initRadarChart(result.metrics)
 
-        // 添加大小变化的监听器
-        const chartContainer = document.getElementById('RocChart-' + nodeType)
-        if (chartContainer) {
-          const resizeObserver = new ResizeObserver(entries => {
-            for (const entry of entries) {
-              const echartsInstance = echarts.getInstanceByDom(entry.target)
-              if (echartsInstance) {
-                echartsInstance.resize()
+          // 添加大小变化的监听器
+          const chartContainer = document.getElementById('RadarChart')
+          if (chartContainer) {
+            const resizeObserver = new ResizeObserver(entries => {
+              for (const entry of entries) {
+                const echartsInstance = echarts.getInstanceByDom(entry.target)
+                if (echartsInstance) {
+                  echartsInstance.resize()
+                }
               }
-            }
-          })
-          resizeObserver.observe(chartContainer)
+            })
+            resizeObserver.observe(chartContainer)
 
-          // 如果需要，可以在组件销毁时停止观察
-          this.$once('hook:beforeDestroy', () => {
-            resizeObserver.unobserve(chartContainer)
-          })
-        }
-      })
+            // 如果需要，可以在组件销毁时停止观察
+            this.$once('hook:beforeDestroy', () => {
+              resizeObserver.unobserve(chartContainer)
+            })
+          }
+        })
+      }
+
+      if (result.pic) {
+        this.output_attack.push('picture')
+        // 展示图片
+        this.haspic = true
+        this.picList = result.pic.map(path =>
+          path.replace('C:', 'localhost')
+        )
+        console.log(this.picList)
+      }
     })
 
     getFlowChartData().then((data) => {
@@ -463,22 +265,12 @@ export default Vue.extend({
     },
     saveData() {
       const modelData = FlowChart.getModelData()
-      // console.log(modelData)
-      // console.log(FlowChart.getCompletedModel())
-      // console.log(modelData)
       this.$message.success('模型保存成功')
-    },
-    rowClick(val) {
-      // console.log('val:' + val.name)
-      this.tenderProjectId = val.name
     },
     getSimple() {
       taskboard_getSimples().then(response => {
-        this.tableData2 = response.data
+        this.sourceTable = response.data
       })
-    },
-    handleChange(val) {
-      // console.log(val)
     },
     getList() {
       this.listLoading = true
@@ -490,118 +282,56 @@ export default Vue.extend({
         }, 1.5 * 1000)
       })
     },
-    handleDownload() {
-      this.downloadLoading = true
-      import('@/vendor/Export2Excel').then(excel => {
-        const tHeader = ['timestamp', 'title', 'type', 'importance', 'status']
-        const filterVal = ['timestamp', 'title', 'type', 'importance', 'status']
-        const data = this.formatJson(filterVal)
-        excel.export_json_to_excel({
-          header: tHeader,
-          data,
-          filename: 'table-list'
-        })
-        this.downloadLoading = false
-      })
-    },
-    formatJson(filterVal) {
-      return this.list.map(v => filterVal.map(j => {
-        if (j === 'timestamp') {
-          return parseTime(v[j])
-        } else {
-          return v[j]
-        }
-      }))
-    },
-    initBarChart() {
-      const chartDom = document.getElementById('BarChart')
-      this.BarChart = echarts.init(chartDom)
-      this.BarChart.setOption({
-        legend: {},
-        grid: {
-          show: false, // 是否显示直角坐标系网格
-          z: 0, // 组件的所有图形的 zlevel 值
-          left: '10%', // grid 组件离容器左侧的距离
-          top: 50, // grid 组件离容器顶部的距离
-          right: '10%', // grid 组件离容器右侧的距离
-          bottom: 20, // grid 组件离容器底部的距离
-          containLabel: true, // grid 区域是否包含坐标轴的刻度标签
-          backgroundColor: 'rgba(0,0,0,0)', // 网格背景色
-          borderWidth: 1, // 网格的边框宽度
-          borderColor: '#ccc' // 网格的边框颜色
-        },
-        tooltip: {},
-        dataset: {
-          dimensions: ['product', '2015', '2016'],
-          source: [
-            { product: 'Matcha Latte', 2015: 43.3, 2016: 85.8 },
-            { product: 'Milk Tea', 2015: 83.1, 2016: 73.4 },
-            { product: 'Cheese Cocoa', 2015: 86.4, 2016: 65.2 },
-            { product: 'Walnut Brownie', 2015: 72.4, 2016: 53.9 }
-          ]
-        },
-        xAxis: {
-          type: 'category',
-          axisLabel: {
-            interval: 0 // 显示所有标签
-          }},
-        yAxis: {},
-        series: [{ type: 'bar' }, { type: 'bar' }]
-      })
-    },
-    initRocChart(id, data) {
-      const chartDom = document.getElementById(id)
+    initRadarChart(data) {
+      const chartDom = document.getElementById('RadarChart')
       this.RocChart = echarts.init(chartDom)
       this.RocChart.setOption({
-        tooltip: {
-          trigger: 'axis'
-        },
+        tooltip: {},
         legend: {
-          data: ['Acc', 'Loss']
+          data: ['Class 0', 'Class 1']
         },
-        grid: {
-          left: '3%',
-          right: '4%',
-          bottom: '3%',
-          containLabel: true
-        },
-        toolbox: {
-          feature: {
-            saveAsImage: {}
-          }
-        },
-        xAxis: {
-          type: 'category',
-          boundaryGap: false,
-          data: data.acc.map((_, i) => `Epoch ${i + 1}`) // 假设每个epoch对应一个数据点
-        },
-        yAxis: {
-          type: 'value'
-        },
-        series: [
-          {
-            name: 'Acc',
-            type: 'line',
-            data: data.acc
+        radar: {
+          // shape: 'circle',
+          name: {
+            textStyle: {
+              color: '#fff',
+              backgroundColor: '#999',
+              borderRadius: 3,
+              padding: [3, 5]
+            }
           },
-          {
-            name: 'Loss',
-            type: 'line',
-            data: data.loss
-          }
-        ]
+          indicator: [
+            { name: 'precision', max: 1 },
+            { name: 'recall', max: 1 },
+            { name: 'f1-score', max: 1 },
+            { name: 'support', max: 1 } // Assuming support is normalized
+          ]
+        },
+        series: [{
+          name: 'Class Comparison',
+          type: 'radar',
+          data: [
+            {
+              value: [
+                data[0]['precision'],
+                data[0]['recall'],
+                data[0]['f1-score'],
+                1 // Normalized support
+              ],
+              name: 'Class 0'
+            },
+            {
+              value: [
+                data[1]['precision'],
+                data[1]['recall'],
+                data[1]['f1-score'],
+                1 // Normalized support
+              ],
+              name: 'Class 1'
+            }
+          ]
+        }]
       })
-    },
-    // 转换特定模型类型的结果数据为表格数据
-    transformResultsToTableData(modelType, result) {
-      const { acc, loss } = result
-      const iterations = acc.map((_, index) => `训练${index + 1}`)
-      const accRow = { type: 'Acc', ...acc.reduce((obj, value, index) => ({ ...obj, [`训练${index + 1}`]: value }), {}) }
-      const lossRow = { type: 'Loss', ...loss.reduce((obj, value, index) => ({ ...obj, [`训练${index + 1}`]: value }), {}) }
-      const tableData = [accRow, lossRow]
-
-      // 将转换后的表格数据存储在allTableData对象中，按模型类型组织
-      this.$set(this.allTableData, modelType, { tableData, iterations })
     }
   }
 })
@@ -620,9 +350,9 @@ export default Vue.extend({
   .leftForm{
     padding-left: 20px;
   }
-  ::v-deep .el-tabs__content{
+  /* ::v-deep .el-tabs__content{
     padding-left: 0px;
-  }
+  } */
 </style>
 
 <style lang="scss">
