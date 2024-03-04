@@ -79,16 +79,16 @@ io.on('connection', (socket) => {
     setTimeout(() => {
       const result = {
         pic: [
-          'C:\\Users\\33053\\Downloads\\result1.png',
-          'C:\\Users\\33053\\Downloads\\result2.png',
-          'C:\\Users\\33053\\Downloads\\result3.png',
-          'C:\\Users\\33053\\Downloads\\result4.png',
-          'C:\\Users\\33053\\Downloads\\result5.png',
-          'C:\\Users\\33053\\Downloads\\result6.png',
-          'C:\\Users\\33053\\Downloads\\result7.png',
-          'C:\\Users\\33053\\Downloads\\result8.png',
-          'C:\\Users\\33053\\Downloads\\result9.png',
-          'C:\\Users\\33053\\Downloads\\result10.png'
+          '@/assets/attack_images/result1.png',
+          '@/assets/attack_images/result2.png',
+          '@/assets/attack_images/result3.png',
+          '@/assets/attack_images/result4.png',
+          '@/assets/attack_images/result5.png',
+          '@/assets/attack_images/result6.png',
+          '@/assets/attack_images/result7.png',
+          '@/assets/attack_images/result8.png',
+          '@/assets/attack_images/result9.png',
+          '@/assets/attack_images/result10.png'
         ],
         metrics: {
           0: {

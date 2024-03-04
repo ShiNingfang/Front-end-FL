@@ -5,10 +5,11 @@
     </div>
     <form method="post">
       <div class="input-box">
+        <input type="email" placeholder="输入邮箱">
         <input type="text" placeholder="输入用户名">
         <input :type="specific_type" placeholder="输入密码">
         <input :type="specific_type" placeholder="确定密码">
-        <input type="text" placeholder="邀请码">
+        <input type="text" placeholder="验证码">
       </div>
       <span class="skip-text" @click="right_move">登录</span>
       <div class="input-button">

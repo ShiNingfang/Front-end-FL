@@ -7,7 +7,7 @@ for (let i = 0; i < count; i++) {
   List.push(Mock.mock({
     idcode: '@guid', // 生成唯一标识符
     name: '@word', // 生成随机单词作为名称
-    set: '@integer(1, 10)', // 生成1到10之间的随机整数作为集合编号
+    set: '横向建模', // 生成1到10之间的随机整数作为集合编号
     source: '@url', // 生成随机URL作为来源
     origin_name: '@word', // 生成随机单词作为原始名称
     data_count: '@integer(1, 100)', // 生成1到100之间的随机整数作为数据计数
@@ -30,8 +30,7 @@ for (let i = 0; i < 100; i++) {
   List2.push(Mock.mock({
     name: '@word', // 生成随机单词作为名称
     author: 'admin', // 作者固定为'admin'
-    number: [], // 空数组，具体需求未指定
-    cooperator: [], // 空数组，具体需求未指定
+    'cooperator|1-5': ['@name'],
     description: '@sentence', // 生成随机句子作为描述
     lastTime: '@datetime', // 生成随机日期时间作为最后一次时间
     type: '@pick(["type1", "type2", "type3"])', // 从数组中随机选择一个类型
@@ -46,7 +45,7 @@ for (let i = 0; i < 100; i++) {
     name: '@word', // 生成随机单词作为名称，假设原始数据中未定义则使用随机单词
     type: '@pick(["type1", "type2", "type3"])', // 从数组中随机选择一个类型
     author: 'admin', // 作者固定为'admin'
-    cooperator: [], // 空数组，具体需求未指定
+    'cooperator|1-5': ['@name'],
     startTime: '@date("yyyy-MM-dd")' // 生成随机日期作为开始时间
   }))
 }

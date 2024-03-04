@@ -119,10 +119,6 @@ export const asyncRoutes = [
         component: () => import('@/views/a_data/Attack'),
         name: 'Attack',
         meta: { title: '攻击模拟', icon: 'edit' }
-        // beforeEnter: (to, from, next) => {
-        //   to.meta.title = to.params.simpleName + '攻击模拟' || '攻击模拟'
-        //   next()
-        // }
       }
     ]
   },
@@ -168,13 +164,13 @@ export const asyncRoutes = [
         component: () => import('@/views/a_project/ProjectOther'),
         name: 'ProjrctOther',
         meta: { title: '我方参与', icon: 'edit' }
-      },
-      {
-        path: 'task',
-        component: () => import('@/views/a_project/TaskDragger/SplitDrag'),
-        name: 'TaskBoard',
-        meta: { title: '任务面板', icon: 'edit' }
       }
+      // {
+      //   path: 'task',
+      //   component: () => import('@/views/a_project/TaskDragger/SplitDrag'),
+      //   name: 'TaskBoard',
+      //   meta: { title: '任务面板', icon: 'edit' }
+      // }
     ]
   },
   {

@@ -31,18 +31,18 @@
           <span>{{ row.name }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="申请者" width="100px" align="center">
+      <el-table-column label="申请者" width="150px" align="center">
         <template slot-scope="{row}">
           <span class="link-type" @click="handleUpdate(row)">{{ row.title }}</span>
-          <el-tag>{{ row.source }}</el-tag>
+          <el-tag>{{ row.origin }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="样本计数" width="100px" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.count }}</span>
+          <span>{{ row.data_count }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="样本用途" width="100px" align="center">
+      <el-table-column label="样本用途" width="150px" align="center">
         <template slot-scope="{row}">
           <span>{{ row.usage }}</span>
         </template>
@@ -56,7 +56,7 @@
       <el-table-column label="截止日期" class-name="status-col" align="center" width="140">
         <template slot-scope="{row}">
           <el-tag :type="row.status | statusFilter">
-            {{ row.lastTime | parseTime('{y}-{m}-{d} {h}:{i}') }}
+            {{ row.deadline | parseTime('{y}-{m}-{d} {h}:{i}') }}
           </el-tag>
         </template>
       </el-table-column>

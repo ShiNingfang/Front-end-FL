@@ -55,7 +55,7 @@ export default {
     margin: auto;
     border-radius: 30px;
     box-shadow: 0px 0px 10px rgb(16, 17, 17);
-    background-color: rgb(255, 255, 255, 0.15);
+    background-color: rgb(21, 38, 90, 0.15);
     backdrop-filter: blur(20px);
 }
 

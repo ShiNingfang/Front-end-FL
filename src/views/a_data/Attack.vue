@@ -62,7 +62,6 @@
                         show-overflow-tooltip
                         highlight-current-row
                         stripe
-                        @selection-change="handleSelectionChange"
                       >
                         <el-table-column
                           type="selection"
@@ -110,8 +109,9 @@
                 <el-collapse-item v-if="hasmetrics" title="雷达图" name="radar">
                   <div id="RadarChart" style="width: 100%;height:400px;" />
                 </el-collapse-item>
+                <!-- <img src="@/assets/attack_images/result1.png"> -->
                 <el-collapse-item v-if="haspic" title="攻击结果图" name="picture">
-                  <el-image v-for="url in picList" :key="url" :src="url" :preview-src-list="picList" lazy />
+                  <el-image v-for="url in picList" :key="url" :src="url" :preview-src-list="picList" />
                 </el-collapse-item>
               </el-collapse>
             </el-tab-pane>
@@ -156,6 +156,19 @@ export default Vue.extend({
       hasmetrics: false,
       haspic: false,
       picList: [],
+      picList1: [
+        require('@/assets/attack_images/result1.png'),
+        require('@/assets/attack_images/result2.png'),
+        require('@/assets/attack_images/result3.png'),
+        require('@/assets/attack_images/result4.png'),
+        require('@/assets/attack_images/result5.png'),
+        require('@/assets/attack_images/result6.png'),
+        require('@/assets/attack_images/result7.png'),
+        require('@/assets/attack_images/result8.png'),
+        require('@/assets/attack_images/result9.png'),
+        require('@/assets/attack_images/result10.png')
+      ],
+      picList2: [require('@/assets/attack_images/result11.png')],
 
       sourceTable: [],
       TabActiveName: 'logger',
@@ -237,9 +250,14 @@ export default Vue.extend({
         this.output_attack.push('picture')
         // 展示图片
         this.haspic = true
-        this.picList = result.pic.map(path =>
-          path.replace('C:', 'localhost')
-        )
+        // this.picList = result.pic.map(path =>
+        //   path.replace('C:', 'localhost')
+        // )
+        if (result.pic.length > 1) {
+          this.picList = this.picList1
+        } else {
+          this.picList = this.picList2
+        }
         console.log(this.picList)
       }
     })
@@ -303,8 +321,8 @@ export default Vue.extend({
           indicator: [
             { name: 'precision', max: 1 },
             { name: 'recall', max: 1 },
-            { name: 'f1-score', max: 1 },
-            { name: 'support', max: 1 } // Assuming support is normalized
+            { name: 'f1-score', max: 1 }
+            // { name: 'support', max: 1 } // Assuming support is normalized
           ]
         },
         series: [{
@@ -315,8 +333,8 @@ export default Vue.extend({
               value: [
                 data[0]['precision'],
                 data[0]['recall'],
-                data[0]['f1-score'],
-                1 // Normalized support
+                data[0]['f1-score']
+                // 1 // Normalized support
               ],
               name: 'Class 0'
             },
@@ -324,8 +342,8 @@ export default Vue.extend({
               value: [
                 data[1]['precision'],
                 data[1]['recall'],
-                data[1]['f1-score'],
-                1 // Normalized support
+                data[1]['f1-score']
+                // 1 // Normalized support
               ],
               name: 'Class 1'
             }

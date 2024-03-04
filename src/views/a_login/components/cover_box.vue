@@ -68,7 +68,7 @@ h1 {
     line-height: 100%;
     font-size: 50px;
     font-weight: 800;
-    color: rgb(255, 255, 255);
+    color: black;
     letter-spacing: 5px;
 }
 

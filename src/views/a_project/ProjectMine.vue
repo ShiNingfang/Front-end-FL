@@ -60,9 +60,6 @@
       </el-table-column>
       <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
         <template slot-scope="{row,$index}">
-          <el-button size="mini" type="primary" @click="handleTask(row)">
-            新建任务
-          </el-button>
           <el-button type="primary" size="mini" @click="handleUpdate(row)">
             编辑
           </el-button>

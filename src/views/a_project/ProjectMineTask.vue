@@ -30,34 +30,34 @@
       @sort-change="sortChange"
       @row-click="gotoTaskBoard"
     >
-      <el-table-column label="任务名称" prop="id" sortable="custom" align="center" min-width="80px" :class-name="getSortClass('id')">
+      <el-table-column label="任务名称" prop="id" sortable="custom" align="center" width="80px" :class-name="getSortClass('id')">
         <template slot-scope="{row}">
           <span>{{ row.name }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="任务类型" align="center" min-width="150px">
+      <el-table-column label="任务类型" align="center" width="150px">
         <template slot-scope="{row}">
           <span>{{ row.type }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="创建者" min-width="150px" align="center">
+      <el-table-column label="创建者" width="150px" align="center">
         <template slot-scope="{row}">
           <span>{{ row.author }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="合作方" width="110px" align="center">
+      <el-table-column label="合作方" min-width="110px" align="center">
         <template slot-scope="{row}">
           <span>{{ row.cooperator }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="创建时间" class-name="status-col" min-width="100px">
+      <el-table-column label="创建时间" class-name="status-col" width="150px">
         <template slot-scope="{row}">
           <el-tag :type="row.status | statusFilter">
             {{ row.startTime | parseTime('{y}-{m}-{d} {h}:{i}') }}
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" min-width="100px" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" width="100px" class-name="small-padding fixed-width">
         <template slot-scope="{row,$index}">
           <!-- <el-button size="mini" type="primary" @click="handleTask(row)">
               新建任务
