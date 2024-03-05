@@ -28,7 +28,7 @@
     >
       <el-table-column label="样本名称" prop="id" sortable="custom" align="center" width="80" :class-name="getSortClass('id')">
         <template slot-scope="{row}">
-          <span>{{ row.name }}</span>
+          <span>{{ row.simple_name }}</span>
         </template>
       </el-table-column>
       <el-table-column label="申请者" width="150px" align="center">
@@ -180,7 +180,7 @@ export default {
       showReviewer: false,
       temp: {
         idcode: '', // 该项数据的唯一标识符
-        name: '',
+        simple_name: '',
         origin: '',
         data_count: undefined, // 数字
         description: '',
@@ -245,7 +245,7 @@ export default {
     resetTemp() {
       this.temp = {
         idcode: '', // 该项数据的唯一标识符
-        name: '',
+        simple_name: '',
         origin: '',
         data_count: undefined, // 数字
         usage: '',

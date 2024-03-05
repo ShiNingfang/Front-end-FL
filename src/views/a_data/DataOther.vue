@@ -46,10 +46,10 @@
         :class-name="getSortClass('id')"
       >
         <template slot-scope="{row}">
-          <span>{{ row.name }}</span>
+          <span>{{ row.simple_name }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="数据来源" width="100px" align="center">
+      <el-table-column label="数据来源" width="150px" align="center">
         <template slot-scope="{row}">
           <span class="link-type" @click="handleUpdate(row)">{{ row.title }}</span>
           <el-tag>{{ row.origin }}</el-tag>
@@ -155,7 +155,7 @@ export default {
       showReviewer: false,
       temp: {
         idcode: '',
-        name: undefined,
+        simple_name: undefined,
         origin: '', // ？？
         data_count: '', // ？？
         description: '',

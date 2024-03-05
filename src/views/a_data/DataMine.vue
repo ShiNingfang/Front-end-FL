@@ -31,7 +31,7 @@
     >
       <el-table-column label="样本名称" prop="id" sortable="custom" align="center" width="80" :class-name="getSortClass('id')">
         <template slot-scope="{row}">
-          <span>{{ row.name }}</span>
+          <span>{{ row.simple_name }}</span>
         </template>
       </el-table-column>
       <el-table-column label="样本集" width="100px" align="center">
@@ -202,7 +202,7 @@ export default {
       showReviewer: false,
       temp: {
         idcode: '',
-        name: undefined,
+        simple_name: undefined,
         set: 1,
         source: '',
         origin_name: '', // ？？
@@ -213,16 +213,6 @@ export default {
         path: '',
         is_upload: false
       },
-      // temp: {
-      //   name: undefined,
-      //   set: 1,
-      //   source: '',
-      //   oldName: '',
-      //   count: '',
-      //   description: '',
-      //   inclusionCount: '',
-      //   lastTime: new Date()
-      // },
       dialogFormVisible: false,
       dialogStatus: '',
       textMap: {
@@ -284,7 +274,7 @@ export default {
     resetTemp() {
       this.temp = {
         idcode: '',
-        name: undefined,
+        simple_name: undefined,
         set: 1,
         source: '',
         origin_name: '', // ？？
