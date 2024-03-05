@@ -69,7 +69,7 @@
                           align="center"
                         />
                         <el-table-column
-                          prop="name"
+                          prop="simple_name"
                           label="样本名称"
                           align="center"
                           width="100px"
@@ -248,11 +248,7 @@ export default Vue.extend({
 
       if (result.pic) {
         this.output_attack.push('picture')
-        // 展示图片
         this.haspic = true
-        // this.picList = result.pic.map(path =>
-        //   path.replace('C:', 'localhost')
-        // )
         if (result.pic.length > 1) {
           this.picList = this.picList1
         } else {

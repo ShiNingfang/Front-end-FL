@@ -206,7 +206,14 @@ export default {
     },
     gotoTaskBoard(row) {
       if (row && row.name) {
-        this.$router.push({ path: `/projectManage/mine/mine_task/${row.name}` })
+        // 将数组转换为字符串，这里使用逗号分隔每个元素
+        const cooperators = row.cooperator.join(',')
+
+        // 将字符串作为查询参数传递
+        this.$router.push({
+          path: `/projectManage/mine/mine_task/${row.name}`,
+          query: { cooperators: cooperators }
+        })
       }
     },
     handleFilter() {

@@ -114,7 +114,7 @@ export default function flowExec({ instance }) {
       changeStateByNodeId(nodeId, 'loading')
       // console.log('hh' + nodeId)
 
-      const algorithmList = ['标准模式', '差分隐私', '负数据库', '优化GAN', '共享权重', '同态加密']
+      const algorithmList = ['标准模式', '差分隐私', '负数据库', '改进的CGAN', '矩阵变换与排序', '同态加密']
       const AttackList = ['梯度泄露', '成员推理', '模型逆向']
       let isAttack = false
       if (node.data.type === '数据源') {

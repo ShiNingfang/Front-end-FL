@@ -50,7 +50,7 @@
               <el-main>
                 <div class="title">参数配置-{{ currentNodeType }}</div>
                 <div class="model-attr">
-                  <el-form v-if="currentNodeType === '标准模式' || currentNodeType === '负数据库' || currentNodeType === '优化GAN' || currentNodeType === '共享权重'" :model="paramsForm" class="demo-form-inline" style="height:100%; padding-right:20px;" label-width="100px">
+                  <el-form v-if="currentNodeType === '标准模式' || currentNodeType === 'XNegDL' || currentNodeType === 'PPUTL' || currentNodeType === '共享数据'" :model="paramsForm" class="demo-form-inline" style="height:100%; padding-right:20px;" label-width="100px">
                     <el-col class="leftForm" :span="12">
                       <el-form-item label="no_models">
                         <el-input-number v-model="paramsForm.no_models" :min="1" :step="1" step-strictly size="mini" style="vertical-align: middle;" />
@@ -227,7 +227,7 @@
                               align="center"
                             />
                             <el-table-column
-                              prop="name"
+                              prop="simple_name"
                               label="样本名称"
                               align="center"
                               width="100px"
@@ -312,7 +312,7 @@ export default Vue.extend({
       isExecDisable: false,
 
       tableData2: [],
-      cooperateList: ['自有数据', '合作方A', '合作方B'],
+      cooperateList: ['自有数据'],
       SourceActiveName: '自有数据',
       TabActiveName: 'logger',
       ResultActiveName: '',
@@ -362,6 +362,10 @@ export default Vue.extend({
   created() {
     this.getSimple()
     this.getList()
+    if (this.$route.query.cooperators) {
+      const cooperatorsArray = this.$route.query.cooperators.split(',')
+      this.cooperateList = ['自有数据', ...cooperatorsArray]
+    }
   },
   mounted() {
     FlowChart.setContainer('mainContainer')

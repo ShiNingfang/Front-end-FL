@@ -68,7 +68,7 @@ io.on('connection', (socket) => {
   console.log('A user connected')
 
   socket.on('attack', (data) => {
-    console.log(`Attack 命令: ${data} `)
+    console.log(data)
     // 模拟发送日志输出
     let counter = 0
     const attackInterval = setInterval(() => {
@@ -77,34 +77,49 @@ io.on('connection', (socket) => {
     }, 1000)
     // 模拟攻击过程和结果
     setTimeout(() => {
-      const result = {
-        pic: [
-          '@/assets/attack_images/result1.png',
-          '@/assets/attack_images/result2.png',
-          '@/assets/attack_images/result3.png',
-          '@/assets/attack_images/result4.png',
-          '@/assets/attack_images/result5.png',
-          '@/assets/attack_images/result6.png',
-          '@/assets/attack_images/result7.png',
-          '@/assets/attack_images/result8.png',
-          '@/assets/attack_images/result9.png',
-          '@/assets/attack_images/result10.png'
-        ],
-        metrics: {
-          0: {
-            'precision': 0.62,
-            'recall': 0.74,
-            'f1-score': 0.68,
-            'support': 10000
-          },
-          1: {
-            'precision': 0.68,
-            'recall': 0.55,
-            'f1-score': 0.61,
-            'support': 10000
+      console.log(data)
+      let result
+      console.log('attack_type:' + data.params.attack_type)
+      if (data.params.attack_type === 1) {
+        result = {
+          metrics: {
+            0: {
+              'precision': 0.62,
+              'recall': 0.74,
+              'f1-score': 0.68,
+              'support': 10000
+            },
+            1: {
+              'precision': 0.68,
+              'recall': 0.55,
+              'f1-score': 0.61,
+              'support': 10000
+            }
           }
         }
+      } else if (data.params.attack_type === 0) {
+        result = {
+          pic: [
+            '@/assets/attack_images/result1.png',
+            '@/assets/attack_images/result2.png',
+            '@/assets/attack_images/result3.png',
+            '@/assets/attack_images/result4.png',
+            '@/assets/attack_images/result5.png',
+            '@/assets/attack_images/result6.png',
+            '@/assets/attack_images/result7.png',
+            '@/assets/attack_images/result8.png',
+            '@/assets/attack_images/result9.png',
+            '@/assets/attack_images/result10.png'
+          ]
+        }
+      } else if (data.params.attack_type === 2) {
+        result = {
+          pic: [
+            '@/assets/attack_images/result11.png'
+          ]
+        }
       }
+      console.log(result)
       socket.emit('attack_result', result)
     }, 3000) // 假设训练需要3秒钟
   })

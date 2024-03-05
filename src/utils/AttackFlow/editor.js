@@ -13,7 +13,7 @@ import { CONNECTORSEPARATESYMBOL } from './const'
 import exec, { AddConnectorCommand, MoveNodeCommand } from './Command'
 
 let container = null
-const algorithmList = ['标准模式', '差分隐私', '负数据库', '优化GAN', '共享权重', '同态加密']
+const algorithmList = ['标准模式', '差分隐私', '负数据库', '改进的CGAN', '矩阵变换与排序', '同态加密']
 const AttackList = ['梯度泄露', '成员推理', '模型逆向']
 
 // const rootNodeId = model.getHead()
@@ -352,7 +352,11 @@ function addNodeByDrag(position, elId) {
     params = {
       choice: 3
     }
-  } else if (type === '共享权重') {
+  } else if (type === '改进的CGAN') {
+    params = {
+      choice: 4
+    }
+  } else if (type === '矩阵变换与排序') {
     params = {
       choice: 5
     }

@@ -110,7 +110,7 @@ module.exports = [
             id: 'source',
             icon: 'el-icon-coin'
           }, {
-            label: '学习算法',
+            label: '隐私保护算法',
             id: 'learn',
             children: [{
               label: '标准模式',
@@ -125,19 +125,18 @@ module.exports = [
               id: 'Homomorphic Encryption',
               icon: 'el-icon-star-off'
             }, {
-              label: '负数据库',
+              label: 'XNegDL',
               id: 'Negative Database',
               icon: 'el-icon-star-off'
             }, {
-              label: '共享权重',
+              label: 'PPUTL',
+              id: 'Improved Generative Adversarial Networks',
+              icon: 'el-icon-star-off'
+            }, {
+              label: '共享数据',
               id: 'Weight Sharing for Collaborative Learning',
               icon: 'el-icon-star-off'
             }
-            // , {
-            //   label: '优化GAN',
-            //   id: 'Improved Generative Adversarial Networks',
-            //   icon: 'el-icon-star-off'
-            // }
             ]
           }, {
             label: '模型对比',
@@ -181,8 +180,12 @@ module.exports = [
               id: 'Negative Database',
               icon: 'el-icon-star-off'
             }, {
-              label: '共享权重',
-              id: 'Weight Sharing for Collaborative Learning',
+              label: '改进的CGAN',
+              id: '改进的CGAN',
+              icon: 'el-icon-star-off'
+            }, {
+              label: '矩阵变换与排序',
+              id: '矩阵变换与排序',
               icon: 'el-icon-star-off'
             }]
           }, {

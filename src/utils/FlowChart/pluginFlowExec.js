@@ -119,7 +119,7 @@ export default function flowExec({ instance }) {
       changeStateByNodeId(nodeId, 'loading')
       console.log('nn' + nodeId)
 
-      const algorithmList = ['标准模式', '差分隐私', '负数据库', '优化GAN', '共享权重', '同态加密']
+      const algorithmList = ['标准模式', '差分隐私', 'XNegDL', 'PPUTL', '共享数据', '同态加密']
       let isModel = false
       if (node.data.type === '数据源') {
         await timeout(() => {

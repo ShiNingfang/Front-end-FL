@@ -13,7 +13,7 @@ import { CONNECTORSEPARATESYMBOL } from './const'
 import exec, { AddConnectorCommand, MoveNodeCommand } from './Command'
 
 let container = null
-const algorithmList = ['标准模式', '差分隐私', '负数据库', '优化GAN', '共享权重', '同态加密']
+const algorithmList = ['标准模式', '差分隐私', 'XNegDL', 'PPUTL', '共享数据', '同态加密']
 
 /**
  * @description 触发命令列表为空事件
@@ -369,7 +369,7 @@ function addNodeByDrag(position, elId) {
       prop: 0.6,
       feature_num: 30
     }
-  } else if (type === '负数据库') {
+  } else if (type === 'XNegDL') {
     params = {
       choice: 3,
       no_models: 5,
@@ -384,7 +384,7 @@ function addNodeByDrag(position, elId) {
       lambda_: 0.1,
       prop: 0.6
     }
-  } else if (type === '优化GAN') {
+  } else if (type === 'PPUTL') {
     params = {
       choice: 4,
       no_models: 5,
@@ -399,7 +399,7 @@ function addNodeByDrag(position, elId) {
       lambda_: 0.1,
       prop: 0.6
     }
-  } else if (type === '共享权重') {
+  } else if (type === '共享数据') {
     params = {
       choice: 5,
       no_models: 5,
